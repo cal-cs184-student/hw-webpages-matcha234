@@ -31,15 +31,15 @@
 		<div style="text-align: center;">Advika Bhike and Malavikha Sudarshan</div>
 
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw1/index.html">cal-cs184-student.github.io/hw-webpages-matcha234/hw1/index.html</a>
 		
 		<br>
 
 		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw1-matcha4">github.com/cal-cs184-student/sp25-hw1-matcha4</a>
 
 		<figure>
-			<img src="lion.jpg" alt="Lion" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<img src="lion.jpg" alt="Lion" style="width:60%"/>
+			<!-- <figcaption>You can add images with captions!</figcaption> -->
 		</figure>
 
 		<!--
@@ -48,19 +48,34 @@
 
 		<h2>Overview</h2>
 		In this homework, we built a basic rasterizer that can efficiently draw triangles, apply supersampling for anti-aliasing, and handle texture mapping with different filtering techniques. It was a really helpful way to understand the content that we had seen in lecture and actually get hands-on experience with how the graphics pipeline works, especially the rasterization process, interpolation, and texture filtering. 
-		One of the most interesting takeaways was how small optimizations, like calculating barycentric coordinates efficiently, could make a big difference in performance.
+		One of the most interesting takeaways was how small optimisations, like calculating barycentric coordinates efficiently, could make a big difference in performance.
 		
 		<!-- TASK 1 -->
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<!-- <p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p> -->
+		<p>The goal of rasterization was to determine which pixels should be filled to properly render a triangle. Instead of iterating over every pixel on the screen, we narrowed it down to only the relevant ones using a bounding box and then used barycentric coordinates to check whether a pixel was inside the triangle.</p>
+		<ul>
+			<li>We first found the smallest axis-aligned rectangle that contained the entire triangle. This gave us a local region to scan instead of checking the entire image.</li>
+			<li>We looped over every pixel in that region and used barycentric coordinates to determine if its center was inside the triangle.</li>
+			<ul>
+				<li>Barycentric coordinates essentially tell us how far the point is from each of the triangle’s vertices.</li>
+				<li>A pixel is inside if all three of its barycentric coordinates are between 0 and 1.</li>
+			</ul>
+		<li>If the pixel was inside, we determined its color (or texture mapping) and updated the framebuffer.</li>
+	</li></ul>
+		<p>This was efficient as instead of looping over the entire screen, we only looked at a local region around the triangle. This meant we skipped lots of unnecessary checks, making our method no worse than one that naively tested every sample inside the bounding box. Both approaches iterate over the same bounding box, but our method skips pixels outside the triangle early. Instead of performing expensive edge function tests multiple times per sample, we used barycentric coordinates efficiently, which helped optimize performance as we only computed barycentric coordinates once per pixel instead of multiple times for sub-samples.</p>
+		
+		<figure>
+			<img src="q1.png" alt="Q1 Image" style="width:80%"/>
+			<figcaption>Screenshot of basic/test4.svg using the default settings and the pixel inspector</figcaption>
+		</figure>
+<!-- 
+	 <p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p> 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
+				  <img src="q1.png" width="400px"/>
 				  <figcaption>Caption goes here.</figcaption>
 				</td>
 				<td style="text-align: center;">
@@ -79,30 +94,36 @@
 				</td>
 			  </tr>
 			</table>
-		</div>
-		
+		</div> 
+	-->
 		<!-- TASK 2 -->
 
 		<h2>Task 2: Antialiasing by Supersampling</h2>
 		For Question 2, we added supersampling to improve image quality by reducing jagged edges (aliasing). Instead of sampling just once per pixel, we took multiple samples per pixel and averaged them to smooth out edges, as shown in lecture. This meant tweaking the way we stored pixel data and how we processed triangles during rasterization.
 		
-		<p>Normally, each pixel holds just one color value, but with supersampling, we stored multiple samples per pixel (e.g., 4x or 16x). This meant creating a larger buffer to keep track of extra color values. Instead of checking if the triangle covered just the center of a pixel, we tested multiple subpixel locations: if a sample landed inside the triangle, we gave it the appropriate color.</p>
+		<p>Normally, each pixel holds just one color value, but with supersampling, we stored multiple samples per pixel. This meant creating a larger buffer to keep track of extra color values. Instead of checking if the triangle covered just the center of a pixel, we tested multiple subpixel locations: if a sample landed inside the triangle, we gave it the appropriate color.</p>
 		
 		<p>Once all triangles were rasterized, we averaged all the subpixel samples in each pixel to get the final color. 
-		Supersampling smoothed out gradients, captured smaller details and helped get rid of jagged edges.</p>
+		Supersampling smoothed out gradients, captured smaller details and helped get rid of jagged edges, which is seen by the pixel inspector comparisons from sample rate values of 1, 4 and 16 (left to right).</p>
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q2_1.png" width="320px"/>
+				  <figcaption>Sample Rate = 1. Obvious jaggies and unrepresented thin lines.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q2_4.png" width="320px"/>
+				  <figcaption>Sample Rate = 4. Smoother edges but still with some aliasing.</figcaption>
 				</td>
+				<td style="text-align: center;">
+					<img src="q2_16.png" width="320px"/>
+					<figcaption>Sample Rate = 16. Thin lines are preserved and gradients make edges smoother.</figcaption>
+				  </td>
 			  </tr>
+			</table>
+		</div>
 		
 		<!-- TASK 3 -->
 		<h2>Task 3: Transforms</h2>
