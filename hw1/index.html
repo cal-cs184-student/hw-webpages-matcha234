@@ -53,17 +53,19 @@
 		<!-- TASK 1 -->
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
-		<p>The goal of rasterization was to determine which pixels should be filled to properly render a triangle. Instead of iterating over every pixel on the screen, we narrowed it down to only the relevant ones using a bounding box and then used barycentric coordinates to check whether a pixel was inside the triangle.</p>
+		<p>To rasterize a triangle, we use a bounding box approach, iterating over the pixels within the smallest rectangle that fully contains the triangle. Within this bounding box, we check whether each sample point falls inside the triangle using the edge function method. We then iterated through all pixel coordinates within this bounding box.</p> 
+		<p>Instead of testing the entire pixel area, we focused on the center of each pixel, which was represented by \( (sx, sy) = (x + 0.5, y + 0.5)\) for each pixel \((x, y).\)</p>
 		<ul>
 			<li>We first found the smallest axis-aligned rectangle that contained the entire triangle. This gave us a local region to scan instead of checking the entire image.</li>
-			<li>We looped over every pixel in that region and used barycentric coordinates to determine if its center was inside the triangle.</li>
-			<ul>
-				<li>Barycentric coordinates essentially tell us how far the point is from each of the triangle’s vertices.</li>
-				<li>A pixel is inside if all three of its barycentric coordinates are between 0 and 1.</li>
-			</ul>
-		<li>If the pixel was inside, we determined its color (or texture mapping) and updated the framebuffer.</li>
-	</li></ul>
-		<p>This was efficient as instead of looping over the entire screen, we only looked at a local region around the triangle. This meant we skipped lots of unnecessary checks, making our method no worse than one that naively tested every sample inside the bounding box. Both approaches iterate over the same bounding box, but our method skips pixels outside the triangle early. Instead of performing expensive edge function tests multiple times per sample, we used barycentric coordinates efficiently, which helped optimize performance as we only computed barycentric coordinates once per pixel instead of multiple times for sub-samples.</p>
+			<li>For each sampled point (sx, sy), we performed three tests based on the triangle's edges. Each edge was represented by a line equation, and we used these equations to check whether the point lay inside the triangle.
+			This is an example of one of the line equations used:
+			 \[ -(sx - x_0) \cdot (y_1 - y_0) + (sy - y_0) \cdot (x_1 - x_0) \] 
+				<!-- \[ −(x−x_0​)⋅(y_1​−y_0​)+(y−y_0​)⋅(x_1​−x_0​) \] -->
+
+		<li>Each edge of the triangle had one of these equations. If all three equations returned values with the same sign (all positive or all negative), the point was inside the triangle, and we coloured it in using the <code>fill_pixel(sx, sy, colour)</code> helper function.</li>
+	</ul>
+		<p>This was efficient as instead of looping over the entire screen, we only looked at a local region around the triangle. Instead of checking multiple points within each pixel, we also sampled only once at the center of the pixel. Using the line equations also made checking each pixel fast since it only required a few arithmetic operations, so, while we still considered every pixel in the bounding box, this approach efficiently determined which pixels needed to be filled.</p>
+
 		
 		<figure>
 			<img src="q1.png" alt="Q1 Image" style="width:80%"/>
@@ -127,8 +129,26 @@
 		
 		<!-- TASK 3 -->
 		<h2>Task 3: Transforms</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		We made Cubeman jump, and cross his legs, by adding a rotation to each of his legs and modifying the y parameter in the first transformation computation, so that the whole robot was raised higher in the bounding box. We also played around with the colours and wanted to make the triangles that make up each square/rectangle explicitly visible, so we filled in neighbouring triangles with contrasting shades of blue.
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q3_1.png" width="320px"/>
+				  <figcaption>Cubeman sitting down.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q3_2.png" width="320px"/>
+				  <figcaption>Cubeman standing with his legs wide, getting ready to jump.</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="q3_3.png" width="320px"/>
+					<figcaption>Cubeman jumping!</figcaption>
+				  </td>
+			  </tr>
+			</table>
+		</div>
 		<!-- TASK 4 -->
 
 		<h2>Task 4: Barycentric coordinates</h2>
