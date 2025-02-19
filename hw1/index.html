@@ -64,7 +64,7 @@
 
 		<li>Each edge of the triangle had one of these equations. If all three equations returned values with the same sign (all positive or all negative), the point was inside the triangle, and we coloured it in using the <code>fill_pixel(sx, sy, colour)</code> helper function.</li>
 	</ul>
-		<p>This was efficient as instead of looping over the entire screen, we only looked at a local region around the triangle. Instead of checking multiple points within each pixel, we also sampled only once at the center of the pixel. Using the line equations also made checking each pixel fast since it only required a few arithmetic operations, so, while we still considered every pixel in the bounding box, this approach efficiently determined which pixels needed to be filled.</p>
+		<p>This was efficient as instead of looping over the entire screen, we only looked at a local region around the triangle. The algorithm is designed to be no worse than one that checks every sample within the bounding box of the triangle. Instead of checking multiple points within each pixel, we sampled only once at the center of the pixel. Using the line equations also made checking each pixel fast since it only required a few arithmetic operations, so, while we still considered every pixel in the bounding box, this approach efficiently determined which pixels needed to be filled.</p>
 
 		
 		<figure>
@@ -223,27 +223,48 @@
 		
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
 		<p>Level sampling worked by computing an appropriate level to sample the mipmap texture from (the level dictated the resolution of the texture). If the inputted level was <code>L_ZERO</code>, then all samples were taken from the mipmap at level 0. If the inputted level was <code>L_NEAREST</code>, the nearest appropriate mipmap level was computed and used. The nearest appropriate mipmap level D was computed according to the formula on the lecture slides. If the inputted level was <code>L_LINEAR</code>, we actually sampled from two mipmap levels (e.g., if the level was 1.2, we sampled from level 1 and level 2) and then returned the result of a linear interpolation across the two samples.</p>
+		<p>There are tradeoffs between speed, memory usage, and anti-aliasing quality when adjusting sampling technique.</p>
+
 		
+		<h4>Pixel Sampling (P_NEAREST vs. P_LINEAR)</h4>
+		<p>
+			<strong>P_NEAREST:</strong> This method selects the texel closest to the pixel being sampled. It is computationally fast because it only considers one texel per pixel. However, this simplicity can lead to blocky or jagged textures, particularly when the texture is stretched or compressed. While it is efficient in terms of speed and memory usage, it can result in noticeable aliasing artifacts, especially at lower resolutions.
+		</p>
+		<p>
+			<strong>P_LINEAR:</strong> Unlike P_NEAREST, P_LINEAR samples two adjacent texels and blends them to compute the pixel color. This approach produces smoother results and reduces aliasing compared to nearest sampling. However, it requires more computation because of the interpolation step. While it takes slightly more time than P_NEAREST, it offers better image quality, especially when zooming in on the texture.
+		</p>
+	
+		<h4>Level Sampling (L_ZERO vs. L_NEAREST vs. L_LINEAR)</h4>
+		<p>
+			<strong>L_ZERO:</strong> This method always uses the highest-resolution mipmap level (level 0), regardless of the current level of detail needed. While this ensures the best quality because it avoids any mipmap transitions, it also requires more memory and processing power. This approach can be inefficient when working with smaller textures or when the object is viewed from a distance.
+		</p>
+		<p>
+			<strong>L_NEAREST:</strong> This method selects the mipmap level closest to the desired resolution based on the level of detail required. It is more efficient than L_ZERO because it uses lower-resolution textures when possible, reducing both memory usage and computational cost. However, it may result in noticeable transitions between mipmap levels, which can cause aliasing artifacts at certain zoom levels.
+		</p>
+		<p>
+			<strong>L_LINEAR:</strong> This technique samples from two mipmap levels and interpolates between them to compute the final texture color. It strikes a balance between the high performance of L_NEAREST and the quality of L_ZERO. While it reduces the visual artifacts caused by mipmap transitions, it requires slightly more computation than L_NEAREST. It is generally more efficient than L_ZERO and offers smoother texture transitions than L_NEAREST.
+		</p>
+
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="q6_1.png" width="400px"/>
-				  <figcaption>L_ZERO, P_NEAREST</figcaption>
+				  <figcaption>L_ZERO, P_NEAREST: highest quality texture with nearest pixel sampling</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="q6_2.png" width="400px"/>
-				  <figcaption>L_ZERO, P_LINEAR</figcaption>
+				  <figcaption>L_ZERO, P_LINEAR: highest quality texture with linear interpolation for smoother results</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="q6_3.png" width="400px"/>
-				  <figcaption>L_NEAREST, P_NEAREST</figcaption>
+				  <figcaption>L_NEAREST, P_NEAREST: nearest mipmap level with nearest pixel sampling</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="q6_4.png" width="400px"/>
-				  <figcaption>L_NEAREST, P_LINEAR</figcaption>
+				  <figcaption>L_NEAREST, P_LINEAR: nearest mipmap level with linear interpolation for smoother texture transitions</figcaption>
 				</td>
 			  </tr>
 			</table>
