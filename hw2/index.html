@@ -117,7 +117,7 @@
 		</ul>
 
 		<figure>
-			<img src="task2.png" alt="Teapot" style="width:50%"/>
+			<img src="task2.png" alt="bez/teapot.bez" style="width:50%"/>
 			<figcaption>An image of bez/teapot.bez evaluated by our implementation</figcaption>
 		</figure>
 		
@@ -127,14 +127,121 @@
 		<h3>Part 3: Area-weighted vertex normals</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h3>Part 4: Edge Flip</h3>
+
+		<p>For this part, we found it helpful to refer to the following diagram which we got from the website linked on the Half-Edge Primer.
+			We set variables for all of the half edges, edges, faces, and vertices that are labelled in the diagram,
+			and set pointers accordingly.
+		</p>
+
+		<figure>
+			<img src="task4-primer.png" alt="Photo from Half-Edge Primer Resources" style="width:50%"/>
+			<figcaption> Reference photo from this link 
+				<a href="http://15462.courses.cs.cmu.edu/fall2015content/misc/HalfedgeEdgeOpImplementationGuide.pdf"> Half-Edge Primer Supplemental Resource</a>
+				(from the spec)</figcaption>
+		</figure>
+
+		<p>Instead of keeping track of all the objects that needed new reassignments and only reassigning those specific things, we just reassigned every single object (even if nothing changed).
+		</p>
+
+		<figure>
+			<img src="task4-beforeflip.png" alt="dae/teapot.dae before flip" style="width:50%"/>
+			<figcaption> dae/teapot.dae before edge flip </figcaption>
+		</figure>
+		<figure>
+			<img src="task4-afterflip.png" alt="dae/teapot.dae before flip" style="width:50%"/>
+			<figcaption> dae/teapot.dae after edge flip </figcaption>
+		</figure>
+
+		<p>We tried to use the provided debugging functions that would print out the locations of the objects; 
+			though it was helpful to have a reference in the terminal, we didn’t find this the most helpful as we were facing an infinite loop problem at some point 
+			(most likely due to a false pointer assignment, which were fixed once we review our pointer assignments). 
+			Our main issue ended up being that we were only focusing on the 6 half-edges on the inside of the triangle and we only reassigned pointers for the two half-edges associated with the edge we were flipping. 	
+		</p>		
+
+		<figure>
+			<img src="task4-firstattempt.png" alt="first attempt at tackling edge splits" style="width:50%"/>
+			<figcaption> Our first attempt at tackling the problem </figcaption>
+		</figure>
+
+		<p>After running into a lot of issues that we couldn't figure out the root cause for, we decided to also keep track of and reassign pointers for the half-edges on the outside of the triangle as well as the other half-edges inside of the triangle. So in total, we were keeping track of and reassigning pointers for 10 half edges. In this spirit, we also reassigned all 4 vertices to the newly updated half-edges, as well as the edges and the faces.
+		</p>
+		<p>After that, we faced some issues in assigning wrong variables to wrong pointers (just some silly mistakes), and to solve that we first tried to look through the code together while referring to the diagram; and if that didn’t work, we tried to look at it in silence individually.
+		</p>
+		<p>Ultimately, having the resources on the spec and mindfully rechecking our work was what really helped the most in building understandment and establishing the correct approach.</p>
+
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>Using the recommendation from the spec, we split this task into 5 different steps. First, we calculated the new positions for the old vertices. Second, we calculated the new positions for the new vertices. Third, we iterated through all the old edges and split all of these edges. Fourth, we flipped any new edges created in the third step if they connected to an old vertex and a new vertex at the same time. Last, we updated all the vertex positions (both new and old) to their newly calculated positions (calculated in step 1 and 2). 
+		</p>
+		
+		<p>An interesting implementation trick we used in the third step was to not flag any edges that we weren’t flipping, even if they were new edges. More specifically we didn’t flag the parallel edge that is created when we split an edge (there’s a total of 3 edges created, 2 of which are perpendicular to the original edge and 1 of which is parallel). This helped us simplify step 4 (we could just use one conditional statement to check whether that edge should be flipped or not, instead of checking for different edge cases). 
+		</p>
+
+		<p>We also decided to store the new position of the new vertex that was created after the edge split in its newPosition attribute, and just loop through every single vertex at the very end of this entire algorithm and just update all of their positions to be newPosition. This allowed us to simplify our last step, instead of having to check whether a vertex is new or not, and only then updating its position.  
+		</p>
+
+		<p>Overall, some debugging tricks we used is making educated decisions about what code to change or look through in detail based on error messages (e.g. if we had an infinite loop, we would look at the section of code where we reassigned pointers or had while loops, if we had a segfault, we’d look out for invalid accesses).
+		</p>
+
+		<p>Some issues we ran into and how we solved them are detailed below:
+		</p>
+
+		<ul>
+			<li>At first, we were trying to access class attributes such as newPosition and isNew through Vertex objects instead of VertexIter objects. We realized this when we were getting segfaults when testing our program and we resolved this issue relatively quickly (as we knew that we should be looking for an incorrect/invalid memory access). 
+			</li>
+			<li>Previously we used Size instead of doubles for <i>n</i> and <i>u</i>, which are intermediate variables used in the calculations of the new vertex positions for old vertices.
+				Visually, our old vertices just looked like they were in wrong positions even though are new vertices were smoothed over correctly. 
+				This was likely due to false rounding. Changing the types to doubles solved this issue.
+			</li>
+			<li>Using the unimplemented computeCentroid function and empty centroid attribute to find the sum of all neighboring vertices also ended up in false new positions for old vertices. We solved this by implementing the algorithm to find the sum of neighbors in the function, taking inspiration from the example code in the spec.
+			</li>
+			<li>Only updating the vertex positions of all old vertices - we didn’t realize that the new vertex should be reassigned to a new position that we calculate during step 2 as well. We corrected this by setting all vertex positions to their newPosition attribute in step 5, and setting the newPosition attribute of the newly created vertex in step 3 to be equal to whatever we calculated in step 2. 
+			</li>
+		</ul>
+
+		<p>
+			Some things we noticed about the cube after several iterations of loop subdivision was that the edges didn't really smooth out perfectly.
+			The sharp corners and edges kind of still stick out, as shown below.
+		</p>
+
+
+		<figure>
+			<img src="task6-cube1.png" alt="Loop Subdivision Iteration 0" style="width:50%"/>
+			<figcaption> No loop subdivision </figcaption>
+		</figure>
+
+		<figure>
+			<img src="task6-cube2.png" alt="Loop Subdivision Iteration 1" style="width:50%"/>
+			<figcaption> After 1 iteration of loop subdivision </figcaption>
+		</figure>
+
+		<figure>
+			<img src="task6-cube3.png" alt="Loop Subdivision Iteration 2" style="width:50%"/>
+			<figcaption> After 2 iterations of loop subdivision </figcaption>
+		</figure>
+
+		<figure>
+			<img src="task6-cube4.png" alt="Loop Subdivision Iteration 3" style="width:50%"/>
+			<figcaption> After 3 iterations of loop subdivision </figcaption>
+		</figure>
+		
+		<p>
+			To alleviate this, we experimented around with different edge split and edge flips while preprocessing.
+			Our best attempt was when we split the edges across each face once when the figure is still a cube (so a total of of 6 edge splits).
+			The figure ends up with edges that are more rounded out after a few iterations of loop subdivision. 
+			Though the cube ends up being subdivided more symmetrically and evenly, this shape ends up being more cube-like than spheric.
+		</p>
+
+		<figure>
+			<img src="task6-cubesmooth.png" alt="Preprocessed Cube" style="width:50%"/>
+			<figcaption> After preprocessing with edge splits, 3rd iteration of loop subdivision </figcaption>
+		</figure>
+
+
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
