@@ -217,7 +217,47 @@
 
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<p>Similar to task 4, referring to a diagram really helped us understand what new objects were coming into the mesh and how to assign these new objects, as well as the preexisting objects. We drew out two triangles, one pre-edge-split and one post-edge-split and referenced it throughout our implementation. 
+		</p>
+
+		<figure>
+			<img src="task5-diagram.png" alt="Diagram that we drew and referenced" style="width:50%"/>
+			<figcaption> Here's what we drew and labelled to help us out! </figcaption>
+		</figure>
+
+		<p>Below are some images of our mesh before and after some split and flip operations!</p>
+
+		<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<tr>
+			  <td style="text-align: center;">
+				<img src="task5-before.png" width="300px"/>
+				<figcaption> Teapot before edge splits <b>without</b> vertex normals.</figcaption>
+			  </td>
+			  <td style="text-align: center;">
+				<img src="task5-after.png" width="300px"/>
+				<figcaption> Teapot after edge splits <b>with</b> vertex normals.</figcaption>
+			  </td>
+			</tr>
+			</table>
+
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+				  <td style="text-align: center;">
+					<img src="task5-bothbefore.png" width="300px"/>
+					<figcaption> Cow before edge splits and edge flips <b>without</b> vertex normals.</figcaption>
+				  </td>
+				  <td style="text-align: center;">
+					<img src="task5-bothafter.png" width="300px"/>
+					<figcaption> Cow after edge splits and edge flips <b>with</b> vertex normals.</figcaption>
+				  </td>
+				</tr>
+				</table>
+
+			<p>We were originally instantiating new vertices using VertexIter(), and the same for half-edges, faces and edges. We were running into segmentation faults before we realised that we were instantiating our new components incorrectly. We did a deep read through halfEdgeMesh.h and then discovered that there was a newVertex() function! Figuring out where we were going wrong required a lot of commenting out code, running it and seeing if the segfault was still occurring.
+			</p>
+
+
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		<p>Using the recommendation from the spec, we split this task into 5 different steps. First, we calculated the new positions for the old vertices. Second, we calculated the new positions for the new vertices. Third, we iterated through all the old edges and split all of these edges. Fourth, we flipped any new edges created in the third step if they connected to an old vertex and a new vertex at the same time. Last, we updated all the vertex positions (both new and old) to their newly calculated positions (calculated in step 1 and 2). 
