@@ -28,16 +28,18 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 3 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Advika Bhike and Malavikha Sudarshan</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html">"cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html"</a>
+
+		<br>
+
+		Link to GitHub repository: <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
 		
 		<figure>
 			<img src="cornell.png" alt="Cornell Boxes with Bunnies" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
 		</figure>
 
 		<!--
@@ -48,31 +50,103 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<h3>Ray Generation and Primitive Intersections</h3>
+		For ray generation, we first converted the given normalised image coordinates (x, y) into camera space. The virtual sensor was defined on the z = -1 plane, and we mapped 
+		(x, y) to a point on the sensor using the field of view (FOV). The bottom-left and top-right 
+		corners of the sensor were computed using:</p>
+		
+		<pre>
+		left = -tan(hFov / 2), right = tan(hFov / 2)
+		bottom = -tan(vFov / 2), top = tan(vFov / 2)
+		</pre>
+		
+		<p>Using these values, we calculated the corresponding point on the sensor as:</p>
+		
+		<pre>
+		sensor_x = left + (right - left) * x
+		sensor_y = bottom + (top - bottom) * y
+		</pre>
+		<p>We then created a ray starting from the camera origin (0,0,0) and passing through this 
+		calculated sensor point. The direction was initially set in camera space, then transformed 
+		to world space using the camera-to-world transformation matrix <code>c2w</code> provided. Finally, we normalised 
+		the direction vector and set the ray's near and far clipping distances to <code>nclip</code> and <code>fclip</code>.</p>
+		
+		<p>For triangle-ray intersections, we implemented a variation of the Möller-Trumbore algorithm. We first defined the edges of the triangle:
+		
+		<pre>
+		edge1 = v1 - v0
+		edge2 = v2 - v0
+		</pre>
+		
+		<p>Then, we calculated the determinant using the cross product:</p>
+		
+		<pre>
+		h = cross(ray.dir, edge2)
+		det = dot(edge1, h)
+		</pre>
+		
+		<p>If the determinant was close to zero, the ray was parallel to the triangle, and so we ignored it.</p>
+		
+		<p>We then calculated barycentric coordinates to determine if the intersection point was inside the triangle:</p>
+		
+		<pre>
+		f = 1.0 / det
+		s = ray.origin - v0
+		u = f * dot(s, h)
+		</pre>
+		
+		<p>If u was not between 0 and 1, we discarded the intersection. We did something similar for v:</p>
+		
+		<pre>
+		q = cross(s, edge1)
+		v = f * dot(ray.dir, q)
+		</pre>
+		
+		<p>If v was out of range or if u + v exceeded 1, then the intersection was outside the triangle.</p>
+		
+		<p>Finally, we computed t (the intersection distance along the ray):</p>
+		
+		<pre>
+		t = f * dot(edge2, q)
+		</pre>
+		
+		<p>If t was within the valid range (between <code>min_t</code> and <code>max_t</code> of the ray), we updated <code>max_t</code> to 
+		this new intersection distance and stored the intersection details, including the interpolated normal 
+		using barycentric coordinates.</p>
+
+		<h3>Triangle Intersection</h3>
+		<p>We first implemented <code>has_intersection</code>, a function that checked if a ray intersected the triangle without actually recording the details of the intersection. To implement this function, we did the following:</p>
+		<ul>
+			<li>First, we got the ray’s origin and direction.</li>
+			<li>Then, we defined the triangle edges and calculated the normal vector using the cross product.</li>
+			<li>We computed the intersection of the ray with the triangle’s plane and checked if it was within valid bounds.</li>
+			<li>Using barycentric coordinates, we verified if the intersection point lay inside the triangle. If it did, we returned <code>true</code> and updated the ray’s <code>max_t</code>.</li>
+		</ul>
+	
+		<p>The <code>intersect</code> function was similar to <code>has_intersection</code>, but it also recorded the intersection data when an intersection happened.</p>
+		<ul>
+			<li>First, we called <code>has_intersection</code> to check if the ray intersected the triangle at all. If not, we could immediately return <code>false</code>.</li>
+			<li>We set up the ray’s origin, direction, and triangle’s edges again.</li>
+			<li>Using the <code>max_t</code> from <code>has_intersection</code>, we computed the exact intersection point.</li>
+			<li>We used barycentric coordinates to calculate the normal at the intersection point.</li>
+			<li>Then, we stored the intersection details, including the intersection distance, normal, and material properties.</li>
+		</ul>
+		
+		<p>Here are some images with normal shading:</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="CBempty.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="CBspheres.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="CBgems.png" width="300px"/>
 				</td>
-			  </tr>
+			</tr>
 			</table>
 		</div>
 		
