@@ -32,7 +32,7 @@
 
 		<br>
 
-		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html">"cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html"</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html">cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html</a>
 
 		<br>
 
@@ -151,8 +151,40 @@
 		</div>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+		<p>For Part 2 of this homework, we implemented a BVH (Bounding Volume Hierarchy) construction algorithm to optimise and speed up ray-triangle intersection queries in our renderer.</p>
+	
+		<p>We began by calculating the bounding box for the entire set of primitives within the range <code>start</code> to <code>end</code>. 
+		We iterated through the primitives, expanding the bounding box <code>bbox</code> to surround all of them. This bounding box would be the enclosing volume for the BVH node. 
+		
+		<p>Next, we checked if the number of primitives in the current node was less than or equal to <code>max_leaf_size</code>. If it was, it was a leaf node, and we set the <code>start</code> and <code>end</code> iterators for the node, which we would later point to the range of primitives stored in that leaf. If the node contained more than <code>max_leaf_size</code> primitives, we had to split it into two child nodes. 
+		To decide how to split, we calculated the extent of the bounding box along each of the three axes (x, y, and z). We chose the axis with the largest extent to split along, as this would likely give us the best spatial separation between the two groups of primitives.</p>
+		
+		<p>After choosing the axis, we needed to split the primitives based on their centroids along the selected axis. We used <code>std::sort</code> to sort the primitives based on their centroids along the selected axis. This meant that we could divide the primitives roughly into 2 equal halves.
+		Finally, we recursively called <code>construct_bvh</code> to construct the left and right child nodes. We passed the <code>start</code> and <code>split</code> iterators for the left child and <code>split</code> and <code>end</code> iterators for the right child.</p>
+		
+		<p>We decided to split the primitives along the axis (x, y, or z) with the biggest size because it helps create a larger gap between the two child nodes. This makes it easier for the BVH to quickly reject nodes during ray tracing tests because there’s less overlap between the child nodes. 
+		Essentially, splitting along the largest axis allows for better separation, which improves efficiency when checking for intersections.</p>
+	
+		<p>Here are some large .dae files with normal shading that can only be rendered with BVH acceleration:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="CBdragon.png" width="300px"/>
+				  <figcaption>Cornell Box Dragon</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="maxplanck.png" width="300px"/>
+				  <figcaption>Max Planck</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="CBlucy.png" width="300px"/>
+					<figcaption>Cornell Box Lucy</figcaption>
+				  </td>
+			</tr>
+			</table>
+		</div>
+		
 		<h2>Part 3: Direct Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
