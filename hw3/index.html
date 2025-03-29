@@ -253,21 +253,32 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-					<img src="task3/CBbunny_H_16_8.png" width="300px"/>
+					<img src="task3/uniform/CBbunny_H_16_8.png" width="300px"/>
 					<figcaption>Cornell Box bunny with 16 samples/pixel and 8 samples/area_light using uniform hemisphere sampling</figcaption>
 				  </td>
 				<td style="text-align: center;">
-				  <img src="task3/CBbunny_16_8.png" width="300px"/>
+				  <img src="task3/importance/CBbunny_16_8.png" width="300px"/>
 				  <figcaption>Cornell Box bunny with 16 samples/pixel and 8 samples/area_light using importance sampling</figcaption>
 				</td>
 			</tr>
 			<tr>
 				<td style="text-align: center;">
-				  <img src="task3/spheres_H_64_32.png" width="300px"/>
+				  <img src="task3/uniform/CBbunny_H_64_32.png" width="300px"/>
+				  <figcaption>Cornell Box bunny with 64 samples/pixel and 32 samples/area_light using uniform hemisphere sampling</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task3/importance/bunny_64_32.png" width="300px"/>
+					<figcaption>Cornell Box bunny with 64 samples/pixel and 32 samples/area_light using importance sampling</figcaption>
+				  </td>
+			</tr>
+
+			<tr>
+				<td style="text-align: center;">
+				  <img src="task3/uniform/spheres_H_64_32.png" width="300px"/>
 				  <figcaption>Cornell Box spheres with 64 samples/pixel and 32 samples/area_light using uniform hemisphere sampling</figcaption>
 				</td>
 				<td style="text-align: center;">
-					<img src="task3/spheres_64_32.png" width="300px"/>
+					<img src="task3/importance/spheres_64_32.png" width="300px"/>
 					<figcaption>Cornell Box spheres with 64 samples/pixel and 32 samples/area_light using importance sampling</figcaption>
 				  </td>
 			</tr>
@@ -314,7 +325,7 @@
 		<p>
 			In general, we can notice that the images using importance sampling tend to be less noisy. 
 			This is because they directly sample from the light source, rather than assume the light source follows a uniform distribution. 
-			Additionally, as both the camera sample rate and light sample rate increase, images rendered with importance sampling tend to converge faster to a high quality, less-noisy image than uniform sampling does as demonstrated in the images below. 
+			Additionally, as both the camera sample rate and light sample rate increase, images rendered with importance sampling tend to converge faster to a higher quality, less-noisy image than uniform sampling does as demonstrated in the images above. 
 			We can also see a clear progression of difference when only the light sample rate is changed when using importance light sampling. 
 		</p>
 
