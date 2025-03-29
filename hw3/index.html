@@ -209,12 +209,12 @@
 		<h2>Part 3: Direct Illumination</h2>
 
 		<p>
-			In this part, we implemented two type of direct lighting: one that uses uniform hemisphere sampling and another that uses importance sampling.
+			In this part, we implemented two types of direct lighting: one that uses uniform hemisphere sampling and another that uses importance sampling.
 		</p>
 
 		<p>
 			First, we sample our light direction and convert this direction into world coordinates. 
-			We then trace a ray from the point hit_p (point of interest derived from the original ray of interest and original intersection of interest) in the direction of the sampled light source and check whether this new ray will intersect with a light source. 
+			We then trace a ray from the point <code>hit_p</code> (point of interest derived from the original ray of interest and original intersection of interest) in the direction of the sampled light source and check whether this new ray will intersect with a light source. 
 			If it does intersect a light source, we use the following reflection equation to calculate the outgoing light.
 		</p>
 
@@ -222,7 +222,7 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<td style="text-align: center;">
 					<img src="task3/reflection_equation.png" width="300px"/>
-					<figcaption>Reflection equation from lecture</figcaption>
+					<figcaption>Reflectance equation from lecture</figcaption>
 				</td>
 			</table>
 		</div>
@@ -239,10 +239,11 @@
 		<p>
 			We iterate through the light sources in the scene and sample them num_samples number of times (which is variable and set when the rendering command is run). 
 			If the light source is a point light source, we only sample it once though. 
-			Otherwise, for each sample in num_samples, we sample directions from the light source and hit_p and cast a ray in this direction. 
+			Otherwise, for each sample in num_samples, we sample directions between the light source and <code>hit_p</code> and cast a ray in this direction. 
 			If this new ray does not intersect any object, then we know it’s a valid light-casting ray, and so we calculate the reflectance equation for it. 
 			We take the Monte Carlo estimate of each light source and then add it to our global sum <code>L_out</code>. 
-			It’s important to note that we need to take the average for each light source before adding it to the global sum because sometimes num_samples can be 1 (e.g. if the light is a point light) and other times it can be another number. 
+			It’s important to note that we need to compute a seperate Monte Carlo estimator for each light source 
+			(specifically, take the average for each specific light source before adding to <code>L_out</code>) before adding it to the global sum because sometimes num_samples can be 1 (e.g. if the light is a point light) and other times it can be the given sample_rate. 
 		</p>
 
 		<p>Here are some images rendered by both types of direct lighting. The sample rate is varied to show how both sampling techniques progress with different sampling rates</p>
@@ -273,7 +274,7 @@
 			</table>
 		</div>
 
-		<p>Here's how the Cornell Box bunny image varies depending on light sample rate for direct light sampling. 
+		<p>Here's how the Cornell Box bunny image varies for different light sample rates for direct light sampling. 
 			The number of camera rays per pixels is held at a constant rate 1.</p>
 		<!-- insert photo -->
 
