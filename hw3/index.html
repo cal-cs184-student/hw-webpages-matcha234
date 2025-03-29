@@ -213,9 +213,9 @@
 		</p>
 
 		<p>
-			First, we sample our light direction and convert this direction into world coordinates. 
-			We then trace a ray from the point <code>hit_p</code> (point of interest derived from the original ray of interest and original intersection of interest) in the direction of the sampled light source and check whether this new ray will intersect with a light source. 
-			If it does intersect a light source, we use the following reflection equation to calculate the outgoing light.
+			First, we sampled our light direction and converted this direction into world coordinates. 
+			We then traced a ray from the point <code>hit_p</code> (point of interest derived from the original ray of interest and original intersection of interest) in the direction of the sampled light source and checked whether this new ray would intersect with a light source. 
+			If it did intersect a light source, we used the following reflection equation to calculate the outgoing light.
 		</p>
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -228,25 +228,25 @@
 		</div>
 		
 		<p>
-			For each sampled light direction, we compute the inner term and keep summing these terms for num_samples number of times (this is variable and is set when we run commands to render images).
-			After summing, we divide by num_samples to take the average of this sum.
+			For each sampled light direction, we computed the inner term and kept summing these terms for num_samples number of times (this was variable and was set when we ran commands to render images).
+			After summing, we divided by num_samples to take the average of this sum.
 		</p>
 
 		<p>
-			Importance sampling, on the other hand, samples all lights directly rather than uniformly on a hemisphere. 
-			This type of sampling also uses a Monte Carlo estimator. 
+			Importance sampling, on the other hand, sampled all lights directly rather than uniformly on a hemisphere. 
+			This type of sampling also used a Monte Carlo estimator. 
 		</p>
 		<p>
-			We iterate through the light sources in the scene and sample them num_samples number of times (which is variable and set when the rendering command is run). 
-			If the light source is a point light source, we only sample it once though. 
-			Otherwise, for each sample in num_samples, we sample directions between the light source and <code>hit_p</code> and cast a ray in this direction. 
-			If this new ray does not intersect any object, then we know it’s a valid light-casting ray, and so we calculate the reflectance equation for it. 
-			We take the Monte Carlo estimate of each light source and then add it to our global sum <code>L_out</code>. 
-			It’s important to note that we need to compute a seperate Monte Carlo estimator for each light source 
-			(specifically, take the average for each specific light source before adding to <code>L_out</code>) before adding it to the global sum because sometimes num_samples can be 1 (e.g. if the light is a point light) and other times it can be the given sample_rate. 
+			We iterated through the light sources in the scene and sampled them num_samples number of times (which was variable and set when the rendering command was run). 
+			If the light source was a point light source, we only sampled it once. 
+			Otherwise, for each sample in num_samples, we sampled directions between the light source and <code>hit_p</code> and cast a ray in this direction. 
+			If this new ray did not intersect any object, then we knew that it was a valid light-casting ray, and so we calculated the reflectance equation for it. 
+			We took the Monte Carlo estimate of each light source and then added it to our global sum <code>L_out</code>. 
+			It was important to note that we needed to compute a seperate Monte Carlo estimator for each light source 
+			(specifically, take the average for each specific light source before adding to <code>L_out</code>) before adding it to the global sum because sometimes num_samples could be 1 (e.g. if the light was a point light) and other times it could be the given sample_rate. 
 		</p>
 
-		<p>Here are some images rendered by both types of direct lighting. The sample rate is varied to show how both sampling techniques progress with different sampling rates</p>
+		<p>Here are some images rendered by both types of direct lighting. The sample rate was varied to show how both sampling techniques progress with different sampling rates</p>
 		<!-- insert photo -->
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -286,7 +286,7 @@
 		</div>
 
 		<p>Here's how the Cornell Box bunny image varies for different light sample rates for direct light sampling. 
-			The number of camera rays per pixels is held at a constant rate 1.</p>
+			The number of camera rays per pixels was held at a constant rate 1.</p>
 		<!-- insert photo -->
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -319,7 +319,7 @@
 		</div>
 
 		<p>
-			The noise in the shadows decreases and becomes more blurred, more realistic and less disconnected as the light sample rate increases.
+			The noise in the shadows decreased and became more blurred, more realistic and less disconnected as the light sample rate increased.
 		</p>
 
 		<p>
