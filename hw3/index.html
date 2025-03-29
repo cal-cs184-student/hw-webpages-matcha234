@@ -138,12 +138,15 @@
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="CBempty.png" width="300px"/>
+				  <figcaption>Cornell Box Empty Room</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="CBspheres.png" width="300px"/>
+				  <figcaption>Cornell Box Spheres</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="CBgems.png" width="300px"/>
+				  <figcaption>Cornell Box Gems</figcaption>
 				</td>
 			</tr>
 			</table>
@@ -160,13 +163,13 @@
 			If it was a leaf node, we set the <code>start</code> and <code>end</code> iterators for the node and returned the node without instantiating the left and right pointers.
 			If the node contained more than <code>max_leaf_size</code> primitives, we split the node into two child nodes, using the median primitive heuristic.
 			To calculate this heuristic, we found the longest axis (between x, y or z) and sorted all the primitives based on their centroid position along that longest axis. 
-			We calculated the midpoint of start and end, and recursively constructed our left and right nodes with different halves of the primitives from the now sorted vector of primitives.
+			We calculated the midpoint of start and end to divide the now sorted vector of primitives, and recursively constructed our left and right nodes with different halves of the vector.
 		</p>
 
 		<p>We decided to split the primitives along the longest axis according to the median primitive because it helps create a fairer distribution between the two child nodes. 
-			This makes it easier to calculate ray-primitive intersections because there's a more even distribution between nodes (as opposed to having less fair heuristics, which could require
-			something like searching an entire child node that has all primitives in the overall bounding box except one). 
-			Essentially, splitting along the largest axis allows for better separation, which improves efficiency when checking for intersections.
+			This makes it easier to calculate ray-primitive intersections because there's a more even distribution between nodes (as opposed to having less even-splitting heuristics, which could require
+			something like searching an entire child node that has all primitives from the overall bounding box except one). 
+			Essentially, splitting along the largest axis using the median primitive allows for better separation, which improves efficiency when checking for intersections.
 		</p>
 
 		<p>Here are some large .dae files with normal shading that can only be rendered with BVH acceleration:</p>
