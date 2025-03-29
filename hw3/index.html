@@ -138,15 +138,15 @@
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="task1/CBempty.png" width="300px"/>
-				  <figcaption>Cornell Box Empty Room</figcaption>
+				  <figcaption>Cornell Box empty room</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="task1/CBspheres.png" width="300px"/>
-				  <figcaption>Cornell Box Spheres</figcaption>
+				  <figcaption>Cornell Box spheres</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="task1/CBgems.png" width="300px"/>
-				  <figcaption>Cornell Box Gems</figcaption>
+				  <figcaption>Cornell Box gems</figcaption>
 				</td>
 			</tr>
 			</table>
@@ -178,11 +178,11 @@
 			  <tr>
 				<td style="text-align: center;">
 					<img src="task2/CBBunny.png" width="300px"/>
-					<figcaption>Cornell Box Bunny</figcaption>
+					<figcaption>Cornell Box bunny</figcaption>
 				  </td>
 				<td style="text-align: center;">
 				  <img src="task2/CBdragon.png" width="300px"/>
-				  <figcaption>Cornell Box Dragon</figcaption>
+				  <figcaption>Cornell Box dragon</figcaption>
 				</td>
 			</tr>
 			<tr>
@@ -207,7 +207,109 @@
 		</p>
 		
 		<h2>Part 3: Direct Illumination</h2>
+
+		<p>
+			In this part, we implemented two type of direct lighting: one that uses uniform hemisphere sampling and another that uses importance sampling.
+		</p>
+
+		<p>
+			First, we sample our light direction and convert this direction into world coordinates. 
+			We then trace a ray from the point hit_p (point of interest derived from the original ray of interest and original intersection of interest) in the direction of the sampled light source and check whether this new ray will intersect with a light source. 
+			If it does intersect a light source, we use the following reflection equation to calculate the outgoing light.
+		</p>
+
+		<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
 		
+		<p>
+			For each sampled light direction, we compute the inner term and keep summing these terms for num_samples number of times (this is variable and is set when we run commands to render images).
+			After summing, we divide by num_samples to take the average of this sum.
+		</p>
+
+		<p>
+			Importance sampling, on the other hand, samples all lights directly rather than uniformly on a hemisphere. 
+			This type of sampling also uses a Monte Carlo estimator. 
+		</p>
+		<p>
+			We iterate through the light sources in the scene and sample them num_samples number of times (which is variable and set when the rendering command is run). 
+			If the light source is a point light source, we only sample it once though. 
+			Otherwise, for each sample in num_samples, we sample directions from the light source and hit_p and cast a ray in this direction. 
+			If this new ray does not intersect any object, then we know it’s a valid light-casting ray, and so we calculate the reflectance equation for it. 
+			We take the Monte Carlo estimate of each light source and then add it to our global sum <code>L_out</code>. 
+			It’s important to note that we need to take the average for each light source before adding it to the global sum because sometimes num_samples can be 1 (e.g. if the light is a point light) and other times it can be another number. 
+		</p>
+
+		<p>Here are some images rendered by both types of direct lighting. The sample rate is varied to show how both sampling techniques progress with different sampling rates</p>
+		<!-- insert photo -->
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+					<img src="task3/CBbunny_H_16_8.png" width="300px"/>
+					<figcaption>Cornell Box bunny with 16 samples/pixel and 8 samples/area_light using uniform hemisphere sampling</figcaption>
+				  </td>
+				<td style="text-align: center;">
+				  <img src="task3/CBbunny_16_8.png" width="300px"/>
+				  <figcaption>Cornell Box bunny with 16 samples/pixel and 8 samples/area_light using importance sampling</figcaption>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+				  <img src="task3/spheres_H_64_32.png" width="300px"/>
+				  <figcaption>Cornell Box spheres with 64 samples/pixel and 32 samples/area_light using uniform hemisphere sampling</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task3/spheres_64_32.png" width="300px"/>
+					<figcaption>Cornell Box spheres with 64 samples/pixel and 32 samples/area_light using importance sampling</figcaption>
+				  </td>
+			</tr>
+			</table>
+		</div>
+
+		<p>Here's how the Cornell Box bunny image varies depending on light sample rate for direct light sampling. 
+			The number of camera rays per pixels is held at a constant rate 1.</p>
+		<!-- insert photo -->
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<tr>
+				<td style="text-align: center;">
+					<img src="task3/vary_sample_rate/CBBunny_1.png" width="300px"/>
+					<figcaption>Light Sample Rate 1</figcaption>
+				  </td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+				  <img src="task3/vary_sample_rate/CBBunny_4.png" width="300px"/>
+				  <figcaption>Light Sample Rate 4</figcaption>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+				  <img src="task3/vary_sample_rate/CBBunny_16.png" width="300px"/>
+				  <figcaption>Light Sample Rate 16</figcaption>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<img src="task3/vary_sample_rate/CBBunny_64.png" width="300px"/>
+					<figcaption>Light Sample Rate 64</figcaption>
+				  </td>
+			</tr>
+			</table>
+		</div>
+
+		<p>
+			The noise in the shadows decreases and becomes more blurred, more realistic and less disconnected as the light sample rate increases.
+		</p>
+
+		<p>
+			In general, we can notice that the images using importance sampling tend to be less noisy. 
+			This is because they directly sample from the light source, rather than assume the light source follows a uniform distribution. 
+			Additionally, as both the camera sample rate and light sample rate increase, images rendered with importance sampling tend to converge faster to a high quality, less-noisy image than uniform sampling does as demonstrated in the images below. 
+			We can also see a clear progression of difference when only the light sample rate is changed when using importance light sampling. 
+		</p>
+
 
 		<h2>Part 4: Global Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
