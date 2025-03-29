@@ -33,7 +33,6 @@
 		<br>
 
 		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html">cal-cs184-student.github.io/hw-webpages-matcha234/hw3/index.html</a>
-
 		<br>
 
 		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw3-matchaaa">github.com/cal-cs184-student/sp25-hw3-matchaaa</a>
@@ -72,7 +71,7 @@
 		to world space using the camera-to-world transformation matrix <code>c2w</code> provided. Finally, we normalised 
 		the direction vector and set the ray's near and far clipping distances to <code>nclip</code> and <code>fclip</code>.</p>
 		
-		<p>For triangle-ray intersections, we implemented a variation of the Möller-Trumbore algorithm. We first defined the edges of the triangle:
+		<p>For triangle-ray intersections, we implemented a variation of the Möller-Trumbore algorithm. We first defined the edges of the triangle:</p>
 		
 		<pre>
 		edge1 = v1 - v0
@@ -151,24 +150,34 @@
 		</div>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		<p>For Part 2 of this homework, we implemented a BVH (Bounding Volume Hierarchy) construction algorithm to optimise and speed up ray-triangle intersection queries in our renderer.</p>
+		<p>For Part 2 of this homework, we implemented a BVH (Bounding Volume Hierarchy) construction algorithm to optimise ray-triangle intersection queries in our renderer, using a median primitive heuristic.</p>
 	
 		<p>We began by calculating the bounding box for the entire set of primitives within the range <code>start</code> to <code>end</code>. 
-		We iterated through the primitives, expanding the bounding box <code>bbox</code> to surround all of them. This bounding box would be the enclosing volume for the BVH node. 
+		We iterated through the primitives, expanding the bounding box <code>bbox</code> to surround all of them. 
+		This bounding box represents the enclosing volume for the new BVH node. 
 		
-		<p>Next, we checked if the number of primitives in the current node was less than or equal to <code>max_leaf_size</code>. If it was, it was a leaf node, and we set the <code>start</code> and <code>end</code> iterators for the node, which we would later point to the range of primitives stored in that leaf. If the node contained more than <code>max_leaf_size</code> primitives, we had to split it into two child nodes. 
-		To decide how to split, we calculated the extent of the bounding box along each of the three axes (x, y, and z). We chose the axis with the largest extent to split along, as this would likely give us the best spatial separation between the two groups of primitives.</p>
-		
-		<p>After choosing the axis, we needed to split the primitives based on their centroids along the selected axis. We used <code>std::sort</code> to sort the primitives based on their centroids along the selected axis. This meant that we could divide the primitives roughly into 2 equal halves.
-		Finally, we recursively called <code>construct_bvh</code> to construct the left and right child nodes. We passed the <code>start</code> and <code>split</code> iterators for the left child and <code>split</code> and <code>end</code> iterators for the right child.</p>
-		
-		<p>We decided to split the primitives along the axis (x, y, or z) with the biggest size because it helps create a larger gap between the two child nodes. This makes it easier for the BVH to quickly reject nodes during ray tracing tests because there’s less overlap between the child nodes. 
-		Essentially, splitting along the largest axis allows for better separation, which improves efficiency when checking for intersections.</p>
+		<p>Next, we checked if the number of primitives in the newly created node was less than or equal to <code>max_leaf_size</code> to determine whether that node was a leaf node. 
+			If it was a leaf node, we set the <code>start</code> and <code>end</code> iterators for the node and returned the node without instantiating the left and right pointers.
+			If the node contained more than <code>max_leaf_size</code> primitives, we split the node into two child nodes, using the median primitive heuristic.
+			To calculate this heuristic, we found the longest axis (between x, y or z) and sorted all the primitives based on their centroid position along that longest axis. 
+			We calculated the midpoint of start and end, and recursively constructed our left and right nodes with different halves of the primitives from the now sorted vector of primitives.
+		</p>
+
+		<p>We decided to split the primitives along the longest axis according to the median primitive because it helps create a fairer distribution between the two child nodes. 
+			This makes it easier to calculate ray-primitive intersections because there's a more even distribution between nodes (as opposed to having less fair heuristics, which could require
+			something like searching an entire child node that has all primitives in the overall bounding box except one). 
+			Essentially, splitting along the largest axis allows for better separation, which improves efficiency when checking for intersections.
+		</p>
+
 	
 		<p>Here are some large .dae files with normal shading that can only be rendered with BVH acceleration:</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
+				<td style="text-align: center;">
+					<img src="bunnytask2.png" width="300px"/>
+					<figcaption>Cornell Box Bunny</figcaption>
+				  </td>
 				<td style="text-align: center;">
 				  <img src="CBdragon.png" width="300px"/>
 				  <figcaption>Cornell Box Dragon</figcaption>
@@ -184,6 +193,14 @@
 			</tr>
 			</table>
 		</div>
+
+		<p>
+			We compared the rendering times (BVH vs. no BVH) for a few images.
+			The Cornell Box Bunny image renders in 0.0349s seconds with the BVH implementation, and in 66.7730s without.
+			The Max Planck image took 0.0444s seconds with our BVH implementation and 98.1858s seconds without. 
+			Cornell Box Lucy took 0.0451s seconds with our BVH implementation and 321.5604s seconds without.
+			These are images with some highly complex geometries, and our BVH implementation speeds up things by more than ___ times. 
+		</p>
 		
 		<h2>Part 3: Direct Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
