@@ -507,57 +507,12 @@
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		<p>
-			In this part, we updated our function ray_trace_pixels to include adaptive sampling. 
-			The main idea behind this is to raytrace more efficiently by checking whether certain pixels converge faster than the given sample rate and terminating their sampling early if they do converge early. 
+			In this part
 		</p>
 
-		<p>
-			To measure their convergence, we use a variable <code>I = 1.96 * σ / √n</code>, which is derived from the 95% confidence interval formula. 
-			We check <code>I &lt;= max_tolerance * μ</code>, where <code>max_tolerance = 0.05</code>; if this inequality is true, then we assume convergence and stop sampling the pixel. 
-		</p>		
+		<!-- <h2>(Optional) Part 6: Extra Credit Opportunities</h2>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. -->
 
-		<p>
-			To actually implement this, we split the total number of samples into batches with samples_per_batches samples (a parameter we can change in the command line) and check the convergence of that batch. 
-			We kept the code for sampling pixels from Part 1 to start off with, and built off of that. 
-			We keep track of two variables:
-		</p>
-
-		<td style="justify-self: center;">
-			<img src="task5/s1_s2_equation.png" width="300px"/>
-		</td>
-
-		<p>
-			Here's the <li>x_k</li> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
-			For each batch size, we compute <li>μ = s1 / n</li> and <li>σ^2 = 1 / (n - 1) * (s2 - s1^2 / n)</li>. 
-			We then plug these values into <li>I = 1.96 * √σ^2 / n</li> and compare with <li>0.05 * μ</li>. If I is greater, then we terminate.
-		</p>
-
-		<p>
-			Something we had to make sure to do is update the true number of samples we average over when calculating the average 
-			- previously we were using <code>num_samples</code> to divide the sum of the radiance when we update <code>sampleBuffer</code> and <code>sampleCountBuffer</code>,
-			but we updated this to use a tracker variable <code>n</code>, which represents the true number of samples.
-		</p>
-
-		<p>
-			Here are some images with their rate pictures. Each image is sampled at 2048 samples per pixels, 1 sample per light, and uses <code>max_ray_depth=5</code>.
-			All other parameters use default values.
-		</p>
-
-		<!--rendering images rn-->
-
-		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
 		</div>
 	</body>
 </html>
