@@ -331,7 +331,13 @@
 
 
 		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>First, we built a local coordinate system based on the surface normal at the intersection point. We used <code>make_coord_space(o2w, isect.n)</code> to create an orthonormal basis and then took its transpose <code>w2o</code> to convert between world and local space. We calculated the intersection point <code>hit_p</code> and the outgoing direction <code>w_out</code> in local space using <code>w2o * (-r.d)</code>.</p>
+        <p>We initialized <code>L_out</code> to black (0,0,0) and added direct lighting using <code>one_bounce_radiance</code>, but only if <code>isAccumBounces</code> was true. If we were only interested in indirect lighting, we skipped this step.</p>
+        <p>Next, we used <code>isect.bsdf->sample_f(w_out, &w_i, &pdf)</code> to sample a new bounce direction, getting a random <code>w_i</code> along with its probability density function (pdf). If <code>pdf</code> was too small, we returned out of the function. We converted <code>w_i</code> from local to world space using <code>w_i_world = o2w * w_i</code> and created a new ray <code>new_ray</code> starting at <code>hit_p</code>. Then, we checked if the ray hit something using <code>bvh->intersect(new_ray, &new_isect)</code>. If there was an intersection, we recursively called <code>at_least_one_bounce_radiance</code> and scaled it by the BSDF, cosine term, and pdf.</p>
+ 
+        <p>To avoid infinite recursion, we used Russian Roulette Termination with a 30% chance of terminating early. If the ray was killed, we returned only direct lighting. Otherwise, we scaled our result to keep the estimator unbiased.</p>
+
+        <p>Finally, we either added the indirect contribution to <code>L_out</code> (if <code>isAccumBounces</code> was true) or replaced <code>L_out</code> entirely. If there was no intersection, we returned black (no contribution).</p>
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
