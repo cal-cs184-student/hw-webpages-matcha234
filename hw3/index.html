@@ -513,7 +513,7 @@
 
 		<p>
 			To measure their convergence, we use a variable <code>I = 1.96 * σ / √n</code>, which is derived from the 95% confidence interval formula. 
-			We check <code>I &lt;= max_tolerance * μ</code>, where <code>max_tolerance = 0.05</code>; if this inequality is true, then we assume convergence and stop sampling the pixel. 
+			We check <code>I &lt;= max_tolerance * μ</code>, where <code>max_tolerance</code> can be set in command line and is default 0.05; if this inequality is true, then we assume convergence and stop sampling the pixel. 
 		</p>		
 
 		<p>
@@ -529,7 +529,7 @@
 		<p>
 			Here's the <li>x_k</li> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
 			For each batch size, we compute <li>μ = s1 / n</li> and <li>σ^2 = 1 / (n - 1) * (s2 - s1^2 / n)</li>. 
-			We then plug these values into <li>I = 1.96 * √σ^2 / n</li> and compare with <li>0.05 * μ</li>. If I is greater, then we terminate.
+			We then plug these values into <li>I = 1.96 * √σ^2 / n</li> and compare with <li>max_tolerance * μ</li>. If I is greater, then we terminate.
 		</p>
 
 		<p>
@@ -539,7 +539,7 @@
 		</p>
 
 		<p>
-			Here are some images with their rate pictures. Each image is sampled at 2048 samples per pixels, 1 sample per light, and uses <code>max_ray_depth=5</code>.
+			Here are some images with their rate pictures. Each image is sampled at 2048 samples per pixels, 1 sample per light, and uses <code>max_ray_depth=5</code>, <code>samples_per_batches=64</code>, and <code>max_tolerance = 0.05</code>.
 			All other parameters use default values.
 		</p>
 
