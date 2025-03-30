@@ -527,9 +527,9 @@
 		</td>
 
 		<p>
-			Here's the <li>x_k</li> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
-			For each batch size, we compute <li>μ = s1 / n</li> and <li>σ^2 = 1 / (n - 1) * (s2 - s1^2 / n)</li>. 
-			We then plug these values into <li>I = 1.96 * √σ^2 / n</li> and compare with <li>max_tolerance * μ</li>. If I is greater, then we terminate.
+			Here the <code>x_k</code> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
+			For each batch size, we compute <code>μ = s1 / n</code> and <code>σ^2 = 1 / (n - 1) * (s2 - s1^2 / n)</code>. 
+			We then plug these values into <code>I = 1.96 * √σ^2 / n</code> and compare with <code>max_tolerance * μ</code>. If I is less than or equal, then we terminate.
 		</p>
 
 		<p>
@@ -539,22 +539,34 @@
 		</p>
 
 		<p>
-			Here are some images with their rate pictures. Each image is sampled at 2048 samples per pixels, 1 sample per light, and uses <code>max_ray_depth=5</code>, <code>samples_per_batches=64</code>, and <code>max_tolerance = 0.05</code>.
+			Here are some images with their rate pictures. Each image is sampled at 2048 samples per pixels, 1 sample per light, and uses <code>max_ray_depth=5</code>, <code>samples_per_batches=64</code>, and <code>max_tolerance=0.05</code>.
 			All other parameters use default values.
 		</p>
 
 		<!--rendering images rn-->
 		<div>
-			<tr>
-				<td style="justify-self: center;">
-					<img src="task5/dragontask5.png" width="300px"/>
-				</td>
-			</tr>
-			<tr>
-				<td style="justify-self: center;">
-					<img src="task5/dragontask5_rate.png" width="300px"/>
-				</td>	
-			</tr>
+			<table>
+				<tr>
+					<td style="justify-self: center;">
+						<img src="task5/dragontask5.png" width="300px"/>
+						<figcaption>dragon.dae</figcaption>
+					</td>
+					<td style="justify-self: center;">
+						<img src="task5/blobtask5.png" width="300px"/>
+						<figcaption>blob.dae</figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="justify-self: center;">
+						<img src="task5/dragontask5_rate.png" width="300px"/>
+						<figcaption>dragon.dae rate</figcaption>
+					</td>	
+					<td style="justify-self: center;">
+						<img src="task5/blobtask5_rate.png" width="300px"/>
+						<figcaption>blob.dae rate</figcaption>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<!-- <h2>(Optional) Part 6: Extra Credit Opportunities</h2>
