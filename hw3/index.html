@@ -359,7 +359,7 @@
 		<!-- insert two photos and also written analysis of the comparison -->
 
 		<p>Here we render the unaccumulated m-th bounce of light for CBbunny.dae by setting isAccumBounces=false and manually setting the -m flag.
-			All images are sampled at 1024 camera rays per pixel.
+			All images are sampled at 1024 camera rays per pixel, with all other values set to their default values.
 		</p>
 
 		<!-- insert photos that we don't have yet 
@@ -367,7 +367,7 @@
 		and how it contributes to the quality of the rendered image compared to rasterization
 		 -->
 
-		<p>We also render the accumulated m-th bounces of light for CBbunny.dae below. All images are sampled at 1024 camera rays per pixel.</p>
+		<p>We also render the accumulated m-th bounces of light for CBbunny.dae below. All images are sampled at 1024 camera rays per pixel, with all other parameters using default values.</p>
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -404,7 +404,7 @@
 
 		<!-- need to compare rendered views of accumulated and unaccumulated bounces-->
 
-		<p>The Russian Roulette rendering is provided below for different values of <code>max_ray_depth</code> and with all images using 1024 samples per pixel.</p>
+		<p>The Russian Roulette rendering is provided below for different values of <code>max_ray_depth</code> and with all images using 1024 samples per pixel. All other parameters are set to their default values.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<tr>
@@ -437,6 +437,48 @@
 				</tr>
 		</table>
 		</div>
+
+		<p>Below, we rendered CBspheres.dae with varying sample-per-pixel rates. All images use 4 light rays and <code>max_ray_depth=32</code>. All other parameters are set to their default values.</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere1-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=1</code></figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere2-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=2</code></figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere4-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=4</code></figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere8-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=8</code></figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere16-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=16</code></figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBsphere/vary_sample/sphere64-4.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=64</code></figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/russian roulette/bunnyRRM100.png" width="300px"/>
+						<figcaption><code>sample-per-pixel=1024</code></figcaption>
+					</td>
+				</tr>
+		</table>
+		</div>		
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
