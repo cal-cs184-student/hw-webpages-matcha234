@@ -353,7 +353,54 @@
 				  <figcaption>Bunny with 1024 samples/pixel and 16 samples/area_light.</figcaption>
 				</td>
 		</table>
-	</div>
+		</div>
+
+		<p>We can analyze the difference between direct and indirect lighting in the following two pictures of CBspheres, both at 1024 samples per pixel:</p>
+		<!-- insert two photos and also written analysis of the comparison -->
+
+		<p>Here we render the unaccumulated m-th bounce of light for CBbunny.dae by setting isAccumBounces=false and manually setting the -m flag.
+			All images are sampled at 1024 camera rays per pixel.
+		</p>
+
+		<!-- insert photos that we don't have yet 
+		Explain in your write-up what you see for the 2nd and 3rd bounce of light, 
+		and how it contributes to the quality of the rendered image compared to rasterization
+		 -->
+
+		<p>We also render the accumulated m-th bounces of light for CBbunny.dae below. All images are sampled at 1024 camera rays per pixel.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM0.png" width="300px"/>
+						<figcaption>0th bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+					<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM1.png" width="300px"/>
+					<figcaption> 1st bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM2.png" width="300px"/>
+						<figcaption> 2nd bounce</figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM3.png" width="300px"/>
+						<figcaption>3rd bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+					<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM4.png" width="300px"/>
+					<figcaption> 4th bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceTrue/bunnyAccumM5.png" width="300px"/>
+						<figcaption> 5th bounce</figcaption>
+					</td>
+				</tr>
+		</table>
+		</div>
 
 
 		<h2>Part 5: Adaptive Sampling</h2>
