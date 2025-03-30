@@ -355,8 +355,30 @@
 		</table>
 		</div>
 
-		<p>We can analyze the difference between direct and indirect lighting in the following two pictures of CBspheres, both at 1024 samples per pixel:</p>
+		<p>We can analyze the difference between direct and indirect lighting in the following two pictures of CBspheres, both at 1024 samples per pixel. 
+			Both images use 16 samples per area light and <code>max_ray_depth=5</code>. All other parameters were default parameters.
+		</p>
+
 		<!-- insert two photos and also written analysis of the comparison -->
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<td style="text-align: center;">
+					<img src="task4/CBsphere/spheres_direct.png" width="300px"/>
+					<figcaption>Cornell Box spheres with only direct lighting {(zero bounce and one bounce)}</figcaption>
+				  </td>
+				<td style="text-align: center;">
+				  <img src="task4/CBsphere/spheres_indirect.png" width="300px"/>
+				  <figcaption>Cornell Box spheres with only indirect lighting {(second bounce to fifth bounce)}</figcaption>
+				</td>
+		</table>
+		</div>
+
+		<p>
+			The image with only direct illumination shows the light coming from the light source itself and also the light all objects receive directly from the light source and reflect back to our eye in one bounce. 
+			In the image with only indirect illumination, we can see the colors of the wall bleeding into the ball, and observe how light bounces off of the wall, onto the ball, and back into our eye. 
+			We render until the fifth bounce, so all light bounces until then are included in this picture. 
+			This picture, however, doesn’t include direct lighting which is why it is dimmer {(since these are all secondary, tertiary, etc. bounces we are looking at.)} 
+		</p>
 
 		<p>Here we render the unaccumulated m-th bounce of light for CBbunny.dae by setting <code>isAccumBounces=false</code> and manually setting the <code>-m</code> flag.
 			All images are sampled at 1024 camera rays per pixel, with all other values set to their default values.
@@ -404,7 +426,7 @@
 
 		<!-- need to compare rendered views of accumulated and unaccumulated bounces-->
 
-		<p>The Russian Roulette rendering is provided below for different values of <code>max_ray_depth</code> and with all images using 1024 samples per pixel. All other parameters are set to their default values.</p>
+		<p>The Russian Roulette rendering for CBbunny.dae is provided below for different values of <code>max_ray_depth</code> and with all images using 1024 samples per pixel. All other parameters are set to their default values.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<tr>
@@ -484,7 +506,9 @@
 		</p>
 
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			In this part
+		</p>
 
 		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
