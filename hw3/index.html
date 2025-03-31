@@ -79,67 +79,28 @@
 		to world space using the camera-to-world transformation matrix <code>c2w</code> provided. Finally, we normalised 
 		the direction vector and set the ray's near and far clipping distances to <code>nclip</code> and <code>fclip</code>.</p>
 		
-		<p>For triangle-ray intersections, we implemented a variation of the Möller-Trumbore algorithm. We first defined the edges of the triangle:</p>
-		
-		<pre>
-		edge1 = v1 - v0
-		edge2 = v2 - v0
-		</pre>
-		
-		<p>Then, we calculated the determinant using the cross product:</p>
-		
-		<pre>
-		h = cross(ray.dir, edge2)
-		det = dot(edge1, h)
-		</pre>
-		
-		<p>If the determinant was close to zero, the ray was parallel to the triangle, and so we ignored it.</p>
-		
-		<p>We then calculated barycentric coordinates to determine if the intersection point was inside the triangle:</p>
-		
-		<pre>
-		f = 1.0 / det
-		s = ray.origin - v0
-		u = f * dot(s, h)
-		</pre>
-		
-		<p>If u was not between 0 and 1, we discarded the intersection. We did something similar for v:</p>
-		
-		<pre>
-		q = cross(s, edge1)
-		v = f * dot(ray.dir, q)
-		</pre>
-		
-		<p>If v was out of range or if u + v exceeded 1, then the intersection was outside the triangle.</p>
-		
-		<p>Finally, we computed t (the intersection distance along the ray):</p>
-		
-		<pre>
-		t = f * dot(edge2, q)
-		</pre>
-		
-		<p>If t was within the valid range (between <code>min_t</code> and <code>max_t</code> of the ray), we updated <code>max_t</code> to 
-		this new intersection distance and stored the intersection details, including the interpolated normal 
-		using barycentric coordinates.</p>
-
 		<h3>Triangle Intersection</h3>
-		<p>We first implemented <code>has_intersection</code>, a function that checked if a ray intersected the triangle without actually recording the details of the intersection. To implement this function, we did the following:</p>
-		<ul>
-			<li>First, we got the ray’s origin and direction.</li>
-			<li>Then, we defined the triangle edges and calculated the normal vector using the cross product.</li>
-			<li>We computed the intersection of the ray with the triangle’s plane and checked if it was within valid bounds.</li>
-			<li>Using barycentric coordinates, we verified if the intersection point lay inside the triangle. If it did, we returned <code>true</code> and updated the ray’s <code>max_t</code>.</li>
-		</ul>
-	
-		<p>The <code>intersect</code> function was similar to <code>has_intersection</code>, but it also recorded the intersection data when an intersection happened.</p>
-		<ul>
-			<li>First, we called <code>has_intersection</code> to check if the ray intersected the triangle at all. If not, we could immediately return <code>false</code>.</li>
-			<li>We set up the ray’s origin, direction, and triangle’s edges again.</li>
-			<li>Using the <code>max_t</code> from <code>has_intersection</code>, we computed the exact intersection point.</li>
-			<li>We used barycentric coordinates to calculate the normal at the intersection point.</li>
-			<li>Then, we stored the intersection details, including the intersection distance, normal, and material properties.</li>
-		</ul>
-		
+
+		<p>
+			To calculate triangle intersection, we first checked whether the triangle and ray even had an intersection. To do this, we used the Moller Trumbore algorithm taught in lecture.
+		</p>
+
+		<td style="text-align: center;">
+			<img src="task1/muller_tromole.png" width="300px"/>
+			<figcaption>Moller Trumbore algorithm from lecture</figcaption>
+		</td>
+
+		<p>
+			This formula allows us to calculate four relevant values: <code>t, b1, b2</code> and <code>1-b1-b2</code> (to be fair, the fourth one is extracted from <code>b1</code> and <code>b2</code>). 
+			The value <code>t</code> represents our time at intersection and the other three values are our barycentric coordinates.
+		</p>
+
+		<p>
+			We first check whether <code>b1, b2</code> and <code>1-b1-b2</code> are valid (between 0 and 1) and also that the time of intersection we calculate is no less than the ray’s <code>min_t</code> and no greater than the ray’s <code>max_t</code>. 
+			If all values are valid, only then do we calculate the normal vector at the point of intersection (calculated using <code>b1, b2</code> and <code>1-b1-b2</code>, and the triangle’s normals) 
+			and update ray’s <code>max_t</code> field and all of the given intersection’s fields (specifically <code>t, n, primitive,</code> and <code>bsdf</code>.)
+		</p>
+
 		<p>Here are some images with normal shading:</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
