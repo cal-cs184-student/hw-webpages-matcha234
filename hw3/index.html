@@ -46,7 +46,15 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this homework, we implemented a lot of different things! 
+		We first implemented some core algorithms to generate camera rays and pixel samples, and find intersections between rays and spheres and rays and triangles (our main primitives or objects interest). 
+		We implemented a bounding volume hierarchy to help make rendering more efficient, using the median primitive in a bounding box as the splitting heuristic. 
+		We then moved onto calculating bounces of light based on principles in physics! 
+		We first focused on direct illumination, or light that comes directly from the light source and also the first bounce of light that reflects off of an object. 
+		We then also implemented an algorithm to calculate the indirect bounces of light that enter our eye. 
+		Combined, we were able to render images with global illumination. 
+		Finally, we implemented adaptive sampling, which helps make our raytracing process more efficient by terminating sampling for pixels that converge earlier than the desired sample rate. 
+		All together, we built a program to render high-quality images with global illumination in an efficient manner.
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
 
