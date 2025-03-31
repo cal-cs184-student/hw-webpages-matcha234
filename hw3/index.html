@@ -494,7 +494,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="justify-self: center;">
+					<td style="text-align: center;">
 						<img src="task4/CBsphere/vary_sample/sphere1024-4.png" width="300px"/>
 						<figcaption><code>sample-per-pixel=1024</code></figcaption>
 					</td>
@@ -507,7 +507,7 @@
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		<p>
-			In this part, we updated our function ray_trace_pixels to include adaptive sampling. 
+			In this part, we updated our function <code>ray_trace_pixels</code> to include adaptive sampling. 
 			The main idea behind this is to raytrace more efficiently by checking whether certain pixels converge faster than the given sample rate and terminating their sampling early if they do converge early. 
 		</p>
 
@@ -517,25 +517,25 @@
 		</p>		
 
 		<p>
-			To actually implement this, we split the total number of samples into batches with samples_per_batches samples (a parameter we can change in the command line) and check the convergence of that batch. 
+			To actually implement this, we split the total number of samples into batches with <code>samples_per_batches</code> samples (a parameter we can change in the command line) and check the convergence of that batch. 
 			We kept the code for sampling pixels from Part 1 to start off with, and built off of that. 
 			We keep track of two variables:
 		</p>
 
-		<td style="justify-self: center;">
+		<td style="text-align: center;">
 			<img src="task5/s1_s2_equation.png" width="300px"/>
 		</td>
 
 		<p>
 			Here the <code>x_k</code> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
 			For each batch size, we compute <code>μ = s1 / n</code> and <code>σ^2 = 1 / (n - 1) * (s2 - s1^2 / n)</code>. 
-			We then plug these values into <code>I = 1.96 * √σ^2 / n</code> and compare with <code>max_tolerance * μ</code>. If I is less than or equal, then we terminate.
+			We then plug these values into <code>I = 1.96 * √σ^2 / n</code> and compare with <code>max_tolerance * μ</code>. If <code>I</code> is less than or equal, then we terminate.
 		</p>
 
 		<p>
 			Something we had to make sure to do is update the true number of samples we average over when calculating the average 
-			- previously we were using <code>num_samples</code> to divide the sum of the radiance when we update <code>sampleBuffer</code> and <code>sampleCountBuffer</code>,
-			but we updated this to use a tracker variable <code>n</code>, which represents the true number of samples.
+			- previously we were using <code>num_samples</code> to divide the sum of the radiance to calculate the average radiance when we update <code>sampleBuffer</code> and <code>sampleCountBuffer</code>,
+			but we updated this to use a tracker variable <code>n</code>, which tracks the true number of samples.
 		</p>
 
 		<p>
@@ -547,21 +547,21 @@
 		<div>
 			<table>
 				<tr>
-					<td style="justify-self: center;">
+					<td style="text-align: center;">
 						<img src="task5/dragontask5.png" width="300px"/>
 						<figcaption>dragon.dae</figcaption>
 					</td>
-					<td style="justify-self: center;">
+					<td style="text-align: center;">
 						<img src="task5/blobtask5.png" width="300px"/>
 						<figcaption>blob.dae</figcaption>
 					</td>
 				</tr>
 				<tr>
-					<td style="justify-self: center;">
+					<td style="text-align: center;">
 						<img src="task5/dragontask5_rate.png" width="300px"/>
 						<figcaption>dragon.dae rate</figcaption>
 					</td>	
-					<td style="justify-self: center;">
+					<td style="text-align: center;">
 						<img src="task5/blobtask5_rate.png" width="300px"/>
 						<figcaption>blob.dae rate</figcaption>
 					</td>
