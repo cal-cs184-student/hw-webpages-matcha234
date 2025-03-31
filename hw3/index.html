@@ -137,7 +137,7 @@
 
 		<p>We decided to split the primitives along the longest axis according to the median primitive because it helps create a fairer distribution between the two child nodes. 
 			This makes it easier to calculate ray-primitive intersections because there's a more even distribution between nodes (as opposed to having less even-splitting heuristics, which could require
-			something like searching an entire child node that has all primitives from the overall bounding box except one). 
+			searching unnecessary large child nodes when raytracing.) 
 			Essentially, splitting along the largest axis using the median primitive allows for better separation, which improves efficiency when checking for intersections.
 		</p>
 
@@ -206,16 +206,16 @@
 			This type of sampling also used a Monte Carlo estimator. 
 		</p>
 		<p>
-			We iterated through the light sources in the scene and sampled them num_samples number of times (which was variable and set when the rendering command was run). 
+			We iterated through the light sources in the scene and sampled them <code>num_samples</code> number of times (which was variable and set when the rendering command was run). 
 			If the light source was a point light source, we only sampled it once. 
-			Otherwise, for each sample in num_samples, we sampled directions between the light source and <code>hit_p</code> and cast a ray in this direction. 
+			Otherwise, for each sample in <code>num_samples</code>, we sampled directions between the light source and <code>hit_p</code> and cast a ray in this direction. 
 			If this new ray did not intersect any object, then we knew that it was a valid light-casting ray, and so we calculated the reflectance equation for it. 
 			We took the Monte Carlo estimate of each light source and then added it to our global sum <code>L_out</code>. 
 			It was important to note that we needed to compute a seperate Monte Carlo estimator for each light source 
-			(specifically, take the average for each specific light source before adding to <code>L_out</code>) before adding it to the global sum because sometimes num_samples could be 1 (e.g. if the light was a point light) and other times it could be the given sample_rate. 
+			(specifically, take the average for each specific light source before adding to <code>L_out</code>) before adding it to the global sum because sometimes <code>num_samples</code> could be 1 (e.g. if the light was a point light) and other times it could be the given sample rate. 
 		</p>
 
-		<p>Here are some images rendered by both types of direct lighting. The sample rate was varied to show how both sampling techniques progress with different sampling rates.</p>
+		<p>Here are some images rendered by both types of direct lighting. The sample rate was varied to show how both sampling techniques progress with different sampling rates. All unspecified parameters use their default values.</p>
 		<!-- insert photo -->
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -255,7 +255,7 @@
 		</div>
 
 		<p>Here's how the Cornell Box bunny image varies for different light sample rates for direct light sampling. 
-			The number of camera rays per pixels was held at a constant rate 1.</p>
+			The number of camera rays per pixels was held at a constant rate 1. All other parameter use their default values.</p>
 		<!-- insert photo -->
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -309,23 +309,23 @@
 
         <p>Finally, we either added the indirect contribution to <code>L_out</code> (if <code>isAccumBounces</code> was true) or replaced <code>L_out</code> entirely. If there was no intersection, we returned black (no contribution).</p>
 		
-		<p>Here are some images rendered with global (direct and indirect) illumination using 1024 samples per pixel: </p>
+		<p>Here are some images rendered with global (direct and indirect) illumination using 1024 samples per pixel and 16 samples/area_light. All other parameters use their default values.</p>
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<td style="text-align: center;">
 					<img src="task4/global/4spheres.png" width="300px"/>
-					<figcaption>Cornell Box spheres with 1024 samples/pixel and 16 samples/area_light.</figcaption>
+					<figcaption>Cornell Box spheres</figcaption>
 				  </td>
 				<td style="text-align: center;">
 				  <img src="task4/global/4bunny.png" width="300px"/>
-				  <figcaption>Bunny with 1024 samples/pixel and 16 samples/area_light.</figcaption>
+				  <figcaption>Cornell Box bunny</figcaption>
 				</td>
 		</table>
 		</div>
 
 		<p>We can analyze the difference between direct and indirect lighting in the following two pictures of CBspheres, both at 1024 samples per pixel. 
-			Both images use 16 samples per area light and <code>max_ray_depth=5</code>. All other parameters were default parameters.
+			Both images use 16 samples per area light and <code>max_ray_depth=5</code>. All other parameters use their default values.
 		</p>
 
 		<!-- insert two photos and also written analysis of the comparison -->
@@ -333,11 +333,11 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<td style="text-align: center;">
 					<img src="task4/CBsphere/spheres_direct.png" width="300px"/>
-					<figcaption>Cornell Box spheres with only direct lighting {(zero bounce and one bounce)}</figcaption>
+					<figcaption>Cornell Box spheres with only direct lighting (zero bounce and one bounce)</figcaption>
 				  </td>
 				<td style="text-align: center;">
 				  <img src="task4/CBsphere/spheres_indirect.png" width="300px"/>
-				  <figcaption>Cornell Box spheres with only indirect lighting {(second bounce to fifth bounce)}</figcaption>
+				  <figcaption>Cornell Box spheres with only indirect lighting (second bounce to fifth bounce)</figcaption>
 				</td>
 		</table>
 		</div>
@@ -426,7 +426,7 @@
 		</div>
 
 		<p>In general, the renderings of unaccumulated bounces got increasingly darker as the number of bounces increased, with the exception of m=0 to m=1.</p> 
-		 <p>For the accumulated bounces, as the number of bounces increased, the brighter the images were, which was the exact opposite as the unaccumulated bounces renderings.</p> 
+		<p>For the accumulated bounces, as the number of bounces increased, the brighter the images were, which was the exact opposite as the unaccumulated bounces renderings.</p> 
 
 		<p>The Russian Roulette rendering for CBbunny.dae is provided below for different values of <code>max_ray_depth</code> and with all images using 1024 samples per pixel. All other parameters are set to their default values.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -546,8 +546,8 @@
 		</p>
 
 		<!--rendering images rn-->
-		<div>
-			<table>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<tr>
 					<td style="text-align: center;">
 						<img src="task5/dragontask5.png" width="300px"/>
