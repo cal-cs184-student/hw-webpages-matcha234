@@ -336,7 +336,7 @@
         <p>We initialized <code>L_out</code> to black (0,0,0) and added direct lighting using <code>one_bounce_radiance</code>, but only if <code>isAccumBounces</code> was true. If we were only interested in indirect lighting, we skipped this step.</p>
         <p>Next, we used <code>isect.bsdf->sample_f(w_out, &w_i, &pdf)</code> to sample a new bounce direction, getting a random <code>w_i</code> along with its probability density function (pdf). If <code>pdf</code> was too small, we returned out of the function. We converted <code>w_i</code> from local to world space using <code>w_i_world = o2w * w_i</code> and created a new ray <code>new_ray</code> starting at <code>hit_p</code>. Then, we checked if the ray hit something using <code>bvh->intersect(new_ray, &new_isect)</code>. If there was an intersection, we recursively called <code>at_least_one_bounce_radiance</code> and scaled it by the BSDF, cosine term, and pdf.</p>
  
-        <p>To avoid infinite recursion, we used Russian Roulette Termination with a 30% chance of terminating early. If the ray was killed, we returned only direct lighting. Otherwise, we scaled our result to keep the estimator unbiased.</p>
+		<p>To prevent infinite recursion, we implemented Russian Roulette termination with a 30% probability of early termination. If the ray was terminated, we returned only the direct lighting. Otherwise, we adjusted the result to maintain an unbiased estimator.</p>
 
         <p>Finally, we either added the indirect contribution to <code>L_out</code> (if <code>isAccumBounces</code> was true) or replaced <code>L_out</code> entirely. If there was no intersection, we returned black (no contribution).</p>
 		
@@ -388,6 +388,43 @@
 		Explain in your write-up what you see for the 2nd and 3rd bounce of light, 
 		and how it contributes to the quality of the rendered image compared to rasterization
 		 -->
+
+		 <div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceFalse/bunnyNoAccumM0.png" width="300px"/>
+						<figcaption>0th bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+					<img src="task4/CBbunny/isAccumBounceFalse/bunnyNoAccumM1.png" width="300px"/>
+					<figcaption> 1st bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceFalse/bunnyNoAccumM2.png" width="300px"/>
+						<figcaption> 2nd bounce</figcaption>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceFalse/bunnyNoAccumM3.png" width="300px"/>
+						<figcaption>3rd bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+					<img src="task4/CBbunny/isAccumBounceFalse/bunnyAccumM4.png" width="300px"/>
+					<figcaption> 4th bounce</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="task4/CBbunny/isAccumBounceFalse/bunnyAccumM5.png" width="300px"/>
+						<figcaption> 5th bounce</figcaption>
+					</td>
+				</tr>
+		</table>
+		</div>
+
+		<p>For the image of the bunny with the 2nd bounce of light, overall, the bunny seemed to have more regions of contrast and shading, with a light source behind it. The bunny looked 3D and glossy, almost like it was made out of plaster. The texture of the bunny’s fur was also more visible in this image.</p>
+		<p>For the image with the 3rd bounce of light, the bunny looked more flat and didn’t have as much texture on the coat. It seemed more two-dimensional, it didn’t have an obviously visible focal light source and it was overall darker. There weren’t as many areas of contrast or shadow in comparison to the image with the 2nd bounce of light.</p>
+
 
 		<p>We also render the accumulated m-th bounces of light for CBbunny.dae below. All images are sampled at 1024 camera rays per pixel, with all other parameters using default values.</p>
 
