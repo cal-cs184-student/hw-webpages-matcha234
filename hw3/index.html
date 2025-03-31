@@ -77,7 +77,7 @@
 		<p>We then created a ray starting from the camera origin (0,0,0) and passing through this 
 		calculated sensor point. The direction was initially set in camera space, then transformed 
 		to world space using the camera-to-world transformation matrix <code>c2w</code> provided. Finally, we normalised 
-		the direction vector and set the ray's near and far clipping distances to <code>nclip</code> and <code>fclip</code>.</p>
+		the direction vector and set the ray's <code>min_t</code> and <code>max_t</code> fields to <code>nclip</code> and <code>fclip</code> respectively.</p>
 		
 		<h3>Triangle Intersection</h3>
 
@@ -85,10 +85,10 @@
 			To calculate triangle intersection, we first checked whether the triangle and ray even had an intersection. To do this, we used the Moller Trumbore algorithm taught in lecture.
 		</p>
 
-		<td style="text-align: center;">
+		<figure">
 			<img src="task1/muller_tromole.png" width="300px"/>
 			<figcaption>Moller Trumbore algorithm from lecture</figcaption>
-		</td>
+		</figure>
 
 		<p>
 			This formula allows us to calculate four relevant values: <code>t, b1, b2</code> and <code>1-b1-b2</code> (to be fair, the fourth one is extracted from <code>b1</code> and <code>b2</code>). 
@@ -524,9 +524,9 @@
 			We keep track of two variables:
 		</p>
 
-		<td style="text-align: center;">
+		<figure>
 			<img src="task5/s1_s2_equation.png" width="300px"/>
-		</td>
+		</figure>
 
 		<p>
 			Here the <code>x_k</code> represents the illuminance for each sample, which we acquire by calling <code>.illum()</code> on the radiance we sample.
