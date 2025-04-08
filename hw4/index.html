@@ -28,19 +28,18 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 4 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: Advika Bhike and Malavikha Sudarshan</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-matcha234/hw4/index.html">cal-cs184-student.github.io/hw-webpages-matcha234/hw4/index.html</a>
 		<br>
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw4-matchaa">github.com/cal-cs184-student/sp25-hw4-matchaa</a>
+		
 		<figure>
 			<img src="clothsim.png" alt="Cloth draped over sphere" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<!-- <figcaption>You can add images with captions!</figcaption> -->
 		</figure>
 
 		<!--
@@ -51,36 +50,109 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Part 1: Masses and springs</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		
+		<p>Here are some screenshots of <code>scene/pinned2.json</code> from a viewing angle where you can clearly see the cloth wireframe, showing the structure of our point masses and springs .</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task1/misc1.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+					<img src="task1/misc3.png" width="375px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="task1/misc2.png" width="300px"/>
 				</td>
 			  </tr>
+			</table>
+		</div>
+
+		<p>We also looked at the wireframe with and without certain constraints:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task1/without_shearing.png" width="330px"/>
+				  <figcaption>Wireframe without any shearing constraints</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+					<img src="task1/only_shearing.png" width="330px"/>
+					<figcaption>Wireframe with only shearing constraints</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task1/all_constraints.png" width="330px"/>
+					<figcaption>Wireframe with all constraints</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 
 		<h2>Part 2: Simulation via numerical integration</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		We experimented with altering certain parameters and observed the effects of these on our rendered cloth.
+		
+		<h4>ks (spring constant)</h4>
+		<p>Low ks: less structural integrity in the fabric, kept vibrating, seemed less stiff and thinner.</p>
+		<p>High ks: much stiffer fabric, wasn't as loose, didn't drape as much at the top and felt thicker.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task2/low_ks.png" width="400px"/>
+				  <figcaption><code>ks = 5</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task2/high_ks.png" width="400px"/>
+					<figcaption><code>ks = 50000</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Density</h4>
+		<p>Low density: less heavy and the fabric came to a still point very quickly.</p>
+		<p>High density: more weighted and the cloth kept vibrating and moving for a long time.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task2/low_density.png" width="400px"/>
+				  <figcaption><code>density = 1</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task2/high_density.png" width="400px"/>
+					<figcaption><code>density = 100000</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Damping</h4>
+		<p>Low damping: fell very quickly, swung around, cloth wasn't stable and swayed a lot even at the resting phase.</p>
+		<p>High damping: High damping: very controlled and prolonged fall, almost felt like the cloth was slowly trying to go through a viscous, syrupy substance. It moved very slowly but also came to a still state much sooner.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task2/low_damping.png" width="400px"/>
+				  <figcaption><code>damping = 0.000%</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task2/high_damping.png" width="400px"/>
+					<figcaption><code>damping = 1.000%</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		
+		<p>Here is a screenshot of our shaded cloth from <code>scene/pinned4.json</code> in its final resting state</p>
+		<figure>
+			<img src="task2/task2.png" style="width:70%"/>
+			<figcaption>Generated using default parameters</figcaption>
+		</figure>
 
 		<h2>Part 3: Handling collisions with other objects</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
