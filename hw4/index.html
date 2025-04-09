@@ -188,7 +188,6 @@
 		<figure>
 			<img src="task3/cloth plane.png" style="width:70%"/>
 		</figure>
-		woohoo
 		
 		<h2>Part 4: Handling self-collisions</h2>
 		To handle self-collisions, we added logic to detect and respond to collisions between point masses within the same cloth. We wanted to avoid expensive all-pairs checks by hashing point masses into a grid, as described in the spec. For each point mass, we looked up nearby point masses in adjacent spatial bins and then used repulsion forces to prevent intersections.
