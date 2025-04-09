@@ -47,8 +47,11 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this assignment, we built a full cloth simulation from the ground up. We started by modeling the cloth as a mass-spring system, adding different types of constraints to keep it stable. Then we handled collisions with spheres, planes, and even the cloth colliding with itself. Finally, we used GLSL to write shaders for lighting and surface effects like Blinn-Phong shading, bump mapping, and displacement mapping.
 
+		It was really satisfying to see the cloth interact realistically with the environment and react differently based on things like spring constant or density. Playing around with shaders was also a cool intro to how GPU rendering works and how lighting and textures can really bring a scene to life. We definitely have a better appreciation now for how computer graphics combine physics and art!
+		
+		
 		<h2>Part 1: Masses and springs</h2>
 		
 		<p>Here are some screenshots of <code>scene/pinned2.json</code> from a viewing angle where you can clearly see the cloth wireframe, showing the structure of our point masses and springs .</p>
@@ -259,9 +262,6 @@
 			</table>
 		</div>
 
-		
-
-
 		<h4>ks (spring constant)</h4>
 		<p>Low ks: the cloth had lots of teeny folds that were more crinkled. As it came to a state of rest, the cloth looked shapeless and like a spiky blob on the plane rather than an obvious folded piece of fabric. The spring constant being low meant that the original square shape of the fabric wasn't well-retained.</p>
 		<p>High ks: the fabric creates fewer but larger, flatter folds that retain shape well so that the cloth reaches a flat, rectangular state at rest.</p>
@@ -299,20 +299,147 @@
 		<h2>Part 5: Shaders</h2>
 		A shader program is code that runs on the GPU to make rendering faster and more aesthetically pleasing. It has two parts: the vertex shader (which moves vertices and passes info like normals/UVs) and the fragment shader (which colours each pixel using lighting and materials). The vertex shader runs once for each vertex in a mesh. It takes in data like the vertex’s position, normal, and texture coordinates, and applies transformations (like camera view and projection) to move it to the correct spot on screen. It can also pass along "varying" variables, like the transformed normal or UV coordinates, to the next stage. The fragment shader runs for every pixel (or fragment) inside the triangle made by the vertices. It takes the interpolated values from the vertex shader (like normals or UVs) and uses them to compute the final color of each pixel, based on lighting models, textures, bump maps, etc. Together, they simulate how materials react to light — shiny, matte, bumpy, smooth, etc. which help simulate specific materials.
 
-		<p></p>
-		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
+		<h4>Blinn-Phong model</h4>
+		<p>The Blinn-Phong shading model breaks lighting into three components: ambient, diffuse, and specular.
 		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
+			<li>Ambient simulates indirect lighting and gives objects base visibility in all directions.</li>
+			
+			<li>Diffuse simulates light scattering evenly across rough surfaces based on the angle between the surface normal and the light direction.</li>
+			
+			<li>Specular simulates the bright highlights you see on shiny surfaces and is based on the angle between the normal and the half-vector between the light direction and the view direction.</li>
 		</ul>
+		<p>We implemented this in our fragment shader by computing each of these components and then adding them together. </p>
+		</p>
+
+		<p>Here are screenshots with the output of each individual component and the full shading result:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task5/ambient.png" width="400px"/>
+				  <figcaption><code>Ambient only</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task5/diffuse.png" width="400px"/>
+					<figcaption><code>Diffuse only</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task5/specular.png" width="400px"/>
+					<figcaption><code>Specular only</code></figcaption>
+				  </td>
+			  </tr>
+			</table>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+					<img src="task5/phong.png" width="400px"/>
+					<figcaption><code>Full Blinn-Phong Shading</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+
+		<p>Here is a screenshot of our texture mapping shader using our own custom texture:</p>
+		<figure>
+			<img src="task5/custom_texture.png" style="width:70%"/>
+			<figcaption>Texture: crumpled paper</figcaption>
+		</figure>
+
+		<p>Here are screenshots of bump mapping and displacement using another one of our custom textures, featuring a panda:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task5/bump-custom-.png" width="300px"/>
+				  <figcaption>Bump mapping on the cloth</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task5/bump_custom_sphere.png" width="300px"/>
+					<figcaption>Bump mapping on the sphere</figcaption>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<img src="task5/displacement_custom_cloth.png" width="300px"/>
+					<figcaption>Displacement mapping on the cloth</figcaption>
+				  </td>
+				<td style="text-align: center;">
+					<img src="task5/displacement_custom_sphere.png" width="300px"/>
+					<figcaption>Displacement mapping on the sphere</figcaption>
+				  </td>
+			  </tr>
+			</table>
+		</div>
+
+<p>The contrast within the texture on the cloth and sphere was slightly more pronounced in displacement mapping, but they looked quite similar. Bump mapping uses lighting tricks to imply depth and texture; it looked like the cloth had little ridges and texture, even though the surface geometry didn’t actually change. Displacement mapping actually modified the geometry of the mesh, which is perhaps why it looks the slightest bit more textured.</p>
+
+<p>We also edited the sphere mesh's coarseness:</p>
+<div style="display: flex; flex-direction: column; align-items: center;">
+	<table style="width: 100%; text-align: center; border-collapse: collapse;">
+	  <tr>
+		<td style="text-align: center;">
+		  <img src="task5/bump_16_cloth.png" width="300px"/>
+		  <figcaption>Bump mapping on the cloth with <code>-o 16 -a 16</code></figcaption>
+		</td>
+		<td style="text-align: center;">
+			<img src="task5/bump_16_sphere.png" width="300px"/>
+			<figcaption>Bump mapping on the sphere with <code>-o 16 -a 16</code></figcaption>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align: center;">
+		  <img src="task5/displacement_16_cloth.png" width="300px"/>
+		  <figcaption>Displacement mapping on the cloth with <code>-o 16 -a 16</code></figcaption>
+		</td>
+		<td style="text-align: center;">
+			<img src="task5/displacement_16_sphere.png" width="300px"/>
+			<figcaption>Displacement mapping on the sphere with <code>-o 16 -a 16</code></figcaption>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align: center;">
+			<img src="task5/bump_128_cloth.png" width="300px"/>
+			<figcaption>Bump mapping on the cloth with <code>-o 128 -a 128</code></figcaption>
+		  </td>		
+		  <td style="text-align: center;">
+			<img src="task5/bump_128_sphere.png" width="300px"/>
+			<figcaption>Bump mapping on the sphere with <code>-o 128 -a 128</code></figcaption>
+		  </td>
+	</tr>
+	<tr>
+		<td style="text-align: center;">
+			<img src="task5/displacement_128_cloth.png" width="300px"/>
+			<figcaption>Displacement mapping on the cloth with <code>-o 128 -a 128</code></figcaption>
+		  </td>
+		<td style="text-align: center;">
+			<img src="task5/displacement_128_sphere.png" width="300px"/>
+			<figcaption>Displacement mapping on the sphere with <code>-o 128 -a 128</code></figcaption>
+		  </td>
+	  </tr>
+	</table>
+</div>
+
+<p>With coarse meshes (-o 16 -a 16), the displacement looked blocky and low-res. With finer meshes (-o 128 -a 128), the sphere and cloth became more smooth and realistic, really showing off the texture. The differences were quite subtle and we really had to zoom in to see them.</p>
+
+<p>Here are screenshots of our mirror shader:</p>
+<div style="display: flex; flex-direction: column; align-items: center;">
+	<table style="width: 100%; text-align: center; border-collapse: collapse;">
+	  <tr>
+		<td style="text-align: center;">
+		  <img src="task5/mirror_cloth.png" width="400px"/>
+		  <figcaption>Mirror shader on the cloth</figcaption>
+		</td>
+		<td style="text-align: center;">
+			<img src="task5/mirror_sphere.png" width="400px"/>
+			<figcaption>Mirror shader on the sphere</figcaption>
+		</td>
+	  </tr>
+	</table>
+</div>
+
 		</div>
 	</body>
 </html>
