@@ -188,7 +188,113 @@
 		woohoo
 		
 		<h2>Part 4: Handling self-collisions</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		To handle self-collisions, we added logic to detect and respond to collisions between point masses within the same cloth. We wanted to avoid expensive all-pairs checks by hashing point masses into a grid, as described in the spec. For each point mass, we looked up nearby point masses in adjacent spatial bins and then used repulsion forces to prevent intersections.
+		<p>We divided the simulation space into 3D bins using a hash function and assigned each point mass to a bin based on its position. We built the hash map, then for each point mass we got its neighbors within nearby bins and used a correction vector to separate intersecting masses. We scaled this vector by friction and distance to mimic realistic behaviour. This meant that the cloth was able to fold over itself naturally without tunneling or sticking.
+		</p>
+
+		<p>Here are some images that document how the cloth fell and folded on itself, starting with an early, initial self-collision and ending with the cloth at a more restful state:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task4/part1/4_1.png" width="330px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part1/4_2.png" width="330px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part1/4_3.png" width="330px"/>
+					<!-- <figcaption><code>ks = 50000</code>. The cloth was too stiff and barely bent around the sphere. It looked kind of floaty and unnatural.</figcaption> -->
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<div>
+			<table> 
+				<tr>
+				<td style="text-align: center;">
+				  <img src="task4/part1/4_4.png" width="330px"/>
+				  <!-- <figcaption><code>ks = 500</code>. The cloth was really stretchy and sagged a lot over the sphere.</figcaption> -->
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part1/4_5.png" width="330px"/>
+					<!-- <figcaption><code>ks = 5000</code>. The cloth draped naturally over the sphere but also seemed to keep its own structure.</figcaption> -->
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>We also varied the density and ks, and observed the following:</p>
+
+		<h4>Density</h4>
+		<p>Low density: the cloth folded more smoothly into clear lines horizontally rather than lots of teeny folds making up each larger one. It also had more folds across the entire cloth at the beginning of the fall.</p>
+		<p>High density: more folds as the cloth folded and landed on itself. It looked more textural, crinkled and “crunchy?” Looked like mountainous mini-folds within each larger fold, and the folds were very localised at the beginning of the fall, only at the bottom of the cloth rather than across the entire piece of fabric.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task4/part2/d_1_1.png" width="400px"/>
+				  <figcaption><code>density = 1</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part2/d_1_2.png" width="400px"/>
+					<figcaption><code>density = 1</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task4/part2/d_1500_1.png" width="400px"/>
+				  <figcaption><code>density = 1500</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part2/d_1500_2.png" width="400px"/>
+					<figcaption><code>density = 1500</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		
+
+
+		<h4>ks (spring constant)</h4>
+		<p>Low ks: the cloth had lots of teeny folds that were more crinkled. As it came to a state of rest, the cloth looked shapeless and like a spiky blob on the plane rather than an obvious folded piece of fabric. The spring constant being low meant that the original square shape of the fabric wasn't well-retained.</p>
+		<p>High ks: the fabric creates fewer but larger, flatter folds that retain shape well so that the cloth reaches a flat, rectangular state at rest.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task4/part2/ks_5_1.png" width="400px"/>
+				  <figcaption><code>ks = 5</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part2/ks_5_2.png" width="400px"/>
+					<figcaption><code>ks = 5</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task4/part2/ks_50000_1.png" width="400px"/>
+				  <figcaption><code>ks = 50000</code></figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task4/part2/ks_50000_2.png" width="400px"/>
+					<figcaption><code>ks = 50000</code></figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		
 
 		<h2>Part 5: Shaders</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
