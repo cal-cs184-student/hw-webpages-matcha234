@@ -297,8 +297,9 @@
 		
 
 		<h2>Part 5: Shaders</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		A shader program is code that runs on the GPU to make rendering faster and more aesthetically pleasing. It has two parts: the vertex shader (which moves vertices and passes info like normals/UVs) and the fragment shader (which colours each pixel using lighting and materials). The vertex shader runs once for each vertex in a mesh. It takes in data like the vertex’s position, normal, and texture coordinates, and applies transformations (like camera view and projection) to move it to the correct spot on screen. It can also pass along "varying" variables, like the transformed normal or UV coordinates, to the next stage. The fragment shader runs for every pixel (or fragment) inside the triangle made by the vertices. It takes the interpolated values from the vertex shader (like normals or UVs) and uses them to compute the final color of each pixel, based on lighting models, textures, bump maps, etc. Together, they simulate how materials react to light — shiny, matte, bumpy, smooth, etc. which help simulate specific materials.
 
+		<p></p>
 		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		
