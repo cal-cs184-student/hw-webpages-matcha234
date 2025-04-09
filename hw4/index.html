@@ -155,8 +155,38 @@
 		</figure>
 
 		<h2>Part 3: Handling collisions with other objects</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+		  In <code>Sphere::collide</code>, we calculated the vector from the sphere's center to the point mass. If the length of that vector was less than the sphere's radius, that meant that the point mass was inside the sphere.
+		  Then we calculated the point on the surface of the sphere (the "tangent point") where the point mass should have landed with a small offset so the cloth wouldn't get stuck. To move the point mass there, we calculated a correction vector and scaled it by <code>(1 - friction)</code> before updating its position.</p>
+		  
+		<p>For <code>Plane::collide</code>, we checked if a point mass crossed from one side of the plane to the other between time steps. If it did, we found where it would have intersected the plane (again with a small offset above the surface) and then used a similar correction vector with friction.</p>
+		 
+		<p>Here is our implementation with three different spring constant (ks) values:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task3/ks_500.png" width="330px"/>
+				  <figcaption><code>ks = 500</code>. The cloth was really stretchy and sagged a lot over the sphere.</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task3/ks_5000.png" width="330px"/>
+					<figcaption><code>ks = 5000</code>. The cloth draped naturally over the sphere but also seemed to keep its own structure.</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task3/ks_50000.png" width="330px"/>
+					<figcaption><code>ks = 50000</code>. The cloth was too stiff and barely bent around the sphere. It looked kind of floaty and unnatural.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
+		<p>Here is a screenshot of the cloth lying at rest on the plane:</p>
+		<figure>
+			<img src="task3/cloth plane.png" style="width:70%"/>
+		</figure>
+		woohoo
+		
 		<h2>Part 4: Handling self-collisions</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
